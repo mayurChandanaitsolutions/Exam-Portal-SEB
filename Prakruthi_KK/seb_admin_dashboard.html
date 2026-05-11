@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEB ExamPortal — Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f8fc;
+  --surface:#ffffff;
+  --border:#d8e2f1;
+
+  --sb:#1f2f4a;
+  --sb-hover:#243652;
+  --sb-active:#2b416a;
+  --sb-text:#a9bbd6;
+
+  --primary:#2563eb;
+  --primary-h:#1d4ed8;
+  --primary-l:#eef6ff;
+
+  --success:#10b981;
+  --success-l:#ecfdf5;
+
+  --warning:#f59e0b;
+  --warning-l:#fffbeb;
+
+  --danger:#ef4444;
+
+  --purple:#8b5cf6;
+  --purple-l:#f5f3ff;
+
+  --teal:#14b8a6;
+
+  --text:#111827;
+  --text2:#374151;
+  --text3:#6b7280;
+
+  --r:12px;
+  --rs:7px;
+
+  --shadow:0 6px 18px rgba(16,24,40,.08);
+
+  /* Layout containment */
+  --page-pad-x:18px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;overflow-x:hidden;max-width:100vw;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);display:flex;font-size:14px;line-height:1.5;width:100%;max-width:100vw;}
+
+/* Hard-stop horizontal overflow caused by long content/scrollbars */
+body{overscroll-behavior-x:none}
+.sidebar,.main,.content,.page,.table-card,table{max-width:100%;}
+img,svg{max-width:100%;height:auto}
+table{table-layout:fixed}
+th,td{word-break:break-word;}
+
+/* Perfect outer gutter alignment */
+.hdr{padding-left:var(--page-pad-x);padding-right:var(--page-pad-x)}
+.content{padding-left:var(--page-pad-x);padding-right:var(--page-pad-x)}
+
+/* ── SIDEBAR ── */
+.sidebar{width:220px;min-width:220px;background:var(--sb);display:flex;flex-direction:column;height:100vh;flex-shrink:0;overflow:hidden}
+.sb-logo{padding:16px 14px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:10px;min-height:58px}
+.logo-icon{width:34px;height:34px;background:var(--primary);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.logo-text .brand{font-size:16px;font-weight:700;color:#fff;line-height:1.2}
+.logo-text .brand span{color:#60a5fa}
+.logo-text .sub{font-size:10px;color:var(--sb-text);letter-spacing:.4px}
+.sb-nav{padding:10px 8px;flex:1;overflow-y:auto}
+.nav-lbl{font-size:9px;font-weight:700;color:#4a6580;letter-spacing:1.2px;text-transform:uppercase;padding:10px 10px 3px;display:block}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:7px;cursor:pointer;color:var(--sb-text);font-size:13px;font-weight:500;transition:all .15s;margin-bottom:2px;user-select:none}
+.nav-item:hover{background:var(--sb-hover);color:#fff}
+.nav-item.active{background:var(--sb-active);color:#fff}
+.nav-icon{font-size:14px;width:17px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--danger);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px;min-width:18px;text-align:center}
+.nav-badge.green{background:var(--success)}
+.sb-foot{padding:12px 12px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:8px}
+.user-av{width:30px;height:30px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.user-info .name{font-size:12.5px;font-weight:600;color:#fff;line-height:1.2}
+.user-info .email{font-size:10px;color:var(--sb-text)}
+.sb-logout{margin-left:auto;background:none;border:none;cursor:pointer;color:var(--sb-text);font-size:15px;padding:5px;border-radius:5px;transition:all .15s;flex-shrink:0;line-height:1}
+.sb-logout:hover{background:rgba(255,255,255,.1);color:#fff}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;width:100%;max-width:100%;}
+
+/* ── HEADER ── fixed height, perfect alignment ── */
+.hdr{
+  background:#fff;border-bottom:1px solid var(--border);
+  height:58px;min-height:58px;max-height:58px;
+  display:flex;align-items:center;
+  padding:0 20px;gap:10px;flex-shrink:0;overflow:hidden;
+}
+.hdr-title{flex-shrink:0;min-width:0}
+.hdr-title h1{font-size:16px;font-weight:700;color:var(--text);white-space:nowrap}
+.hdr-title p{font-size:10.5px;color:var(--text3);white-space:nowrap}
+.hdr-space{flex:1}
+.hdr-actions{display:flex;align-items:center;gap:7px;flex-shrink:0}
+
+/* ── CHIPS ── */
+.chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px 4px 7px;border-radius:20px;font-size:12px;font-weight:500;white-space:nowrap;flex-shrink:0}
+.chip-green{background:var(--success-l);border:1px solid #a7f3d0;color:#065f46}
+.chip-live{background:var(--success-l);border:1px solid #a7f3d0;color:var(--success);font-weight:600;cursor:pointer}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--success);flex-shrink:0}
+.ldot{width:6px;height:6px;border-radius:50%;background:var(--success);animation:pulse 1.4s infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.timer{font-family:'DM Mono',monospace;font-size:12.5px;color:var(--text2);background:var(--bg);padding:4px 9px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+
+.hdr-search{display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);padding:5px 10px;min-width:150px;max-width:180px;flex-shrink:0}
+.hdr-search input{background:none;border:none;outline:none;font-size:12.5px;font-family:inherit;color:var(--text);width:100%}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:var(--rs);font-size:12.5px;font-weight:500;cursor:pointer;border:none;transition:all .15s;font-family:inherit;white-space:nowrap;line-height:1;flex-shrink:0}
+.btn-p{background:var(--primary);color:#fff}
+.btn-p:hover{background:var(--primary-h)}
+.btn-o{background:transparent;color:var(--text2);border:1px solid var(--border)}
+.btn-o:hover{background:var(--bg)}
+.btn-d{background:var(--danger);color:#fff}
+.btn-d:hover{background:#dc2626}
+.btn-s{background:var(--success);color:#fff}
+.btn-s:hover{background:#059669}
+.btn-w{background:var(--warning);color:#fff}
+.btn-w:hover{background:#d97706}
+.btn-sm{padding:4px 9px;font-size:11.5px}
+.btn-xs{padding:3px 7px;font-size:11px}
+.btn-icon{padding:5px 8px}
+
+/* ── CONTENT / PAGES ── */
+.content{flex:1;overflow-y:auto;padding:16px 18px;width:100%;max-width:100%;overflow-x:hidden}
+.page{display:none;flex-direction:column;height:100%;overflow:hidden}
+.page.active{display:flex}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow)}
+.card-hdr{padding:13px 15px 11px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.card-title{font-size:13px;font-weight:700;color:var(--text)}
+.card-sub{font-size:10.5px;color:var(--text3);margin-top:1px}
+.card-body{padding:13px 15px}
+
+/* ── STATS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.stat-card{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow);padding:14px 16px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.sc-pu::before{background:var(--purple)}.sc-te::before{background:var(--teal)}.sc-bl::before{background:var(--primary)}.sc-am::before{background:var(--warning)}
+.stat-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.stat-ico{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.si-pu{background:var(--purple-l)}.si-te{background:#f0fdfa}.si-bl{background:var(--primary-l)}.si-am{background:var(--warning-l)}
+.sbadge{font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:12px}
+.sbadge-up{background:#ecfdf5;color:var(--success)}.sbadge-dn{background:#fef2f2;color:var(--danger)}.sbadge-lv{background:var(--success-l);color:var(--success)}
+.stat-val{font-size:24px;font-weight:700;line-height:1;margin-bottom:3px}
+.sv-pu{color:var(--purple)}.sv-te{color:var(--teal)}.sv-bl{color:var(--primary)}.sv-am{color:var(--warning)}
+.stat-lbl{font-size:11.5px;color:var(--text3);font-weight:500}
+
+/* ── CHARTS ROW ── */
+.charts-row{display:grid;grid-template-columns:1fr 290px;gap:12px;margin-bottom:14px}
+.chart-filters{display:flex;gap:5px}
+.fbtn{padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text2);font-family:inherit;transition:all .15s}
+.fbtn:hover{background:var(--bg)}
+.fbtn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.chart-area{width:100%;height:155px}
+.chart-area svg{width:100%;height:100%}
+.live-nums{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.lnum-card{border-radius:7px;padding:10px 12px;text-align:center}
+.lnc-g{background:#ecfdf5}.lnc-b{background:var(--primary-l)}
+.lnum{font-size:21px;font-weight:700}.ln-g{color:var(--success)}.ln-b{color:var(--primary)}
+.lnum-lbl{font-size:10.5px;color:var(--text3);font-weight:500;margin-top:1px}
+.subj-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.subj-nm{font-size:12px;color:var(--text2);width:65px;flex-shrink:0}
+.pbar{flex:1;height:5px;background:#e2e8f0;border-radius:3px;overflow:hidden}
+.pfill{height:100%;border-radius:3px;transition:width .4s}
+.spct{font-size:11px;font-weight:600;width:29px;text-align:right}
+
+/* ── BOTTOM ROW ── */
+.bottom-row{display:grid;grid-template-columns:1fr 300px;gap:12px}
+.upcoming-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.upcoming-item:last-child{border-bottom:none}
+.date-box{width:36px;height:40px;background:var(--primary-l);border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.date-box .day{font-size:15px;font-weight:700;color:var(--primary);line-height:1}
+.date-box .mon{font-size:8.5px;text-transform:uppercase;color:var(--text3);font-weight:600}
+
+/* ── TABLE ── */
+.table-card{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden;max-width:100%}
+table{width:100%;border-collapse:collapse;max-width:100%}
+thead tr{background:#2563eb}
+thead th{padding:9px 12px;text-align:left;font-size:10.5px;font-weight:600;color:#fff;letter-spacing:.4px;text-transform:uppercase}
+thead th:first-child{border-radius:0}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#f8fafc}
+tbody td{padding:9px 12px;font-size:12.5px;color:var(--text2);vertical-align:middle}
+.tfoot{padding:10px 14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:#fafbfc}
+.tfoot-info{font-size:11.5px;color:var(--text3)}
+
+/* ── PILLS ── */
+.pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;font-size:11.5px;font-weight:600}
+.pl{background:var(--success-l);color:var(--success)}
+.ps{background:var(--warning-l);color:#92400e}
+.pd{background:#f1f5f9;color:#475569}
+.pa{background:var(--success-l);color:var(--success)}
+.pr{background:#fef2f2;color:var(--danger)}
+.pdi{background:#fef2f2;color:var(--danger)}
+
+/* ── PAGINATION ── */
+.pagination{display:flex;align-items:center;gap:4px}
+.pg-btn{width:26px;height:26px;border-radius:5px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-size:12px;font-family:inherit;color:var(--text2);display:flex;align-items:center;justify-content:center;transition:all .1s}
+.pg-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.pg-btn:hover:not(.active){background:var(--bg)}
+
+/* ── TRACKING BAR ── */
+.tracking-bar{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow);padding:13px 15px;margin-bottom:12px}
+.trk-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.trk-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.trk-stat{background:var(--bg);border-radius:7px;padding:9px 11px;border:1px solid var(--border)}
+.trk-stat .val{font-size:19px;font-weight:700;line-height:1}
+.trk-stat .lbl{font-size:10px;color:var(--text3);margin-top:2px}
+
+/* ── FILTER BAR ── */
+.filter-bar{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow);padding:9px 13px;display:flex;align-items:center;gap:8px;margin-bottom:11px;flex-wrap:wrap}
+.flbl{font-size:11.5px;font-weight:600;color:var(--text3)}
+.fsel{padding:5px 9px;border:1px solid var(--border);border-radius:var(--rs);font-size:12.5px;font-family:inherit;background:var(--bg);color:var(--text2);cursor:pointer;outline:none}
+.fsel:focus{border-color:var(--primary)}
+.btn-reset{display:inline-flex;align-items:center;gap:4px;background:transparent;border:1px solid var(--border);color:var(--text3);padding:4px 10px;border-radius:var(--rs);font-size:12px;cursor:pointer;font-family:inherit;transition:all .15s}
+.btn-reset:hover{background:var(--bg);color:var(--text2)}
+
+/* ── TOGGLE ── */
+.toggle{width:32px;height:18px;background:var(--primary);border-radius:9px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;display:inline-block}
+.toggle.off{background:#cbd5e1}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;background:#fff;border-radius:50%;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle:not(.off)::after{left:16px}
+
+/* ── DEPT TAG ── */
+.dtag{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:600}
+
+/* ── EXAM MANAGER ── */
+.em-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.em-stat{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow);padding:13px 15px}
+.em-stat .ev{font-size:22px;font-weight:700;line-height:1}
+.em-stat .el{font-size:11px;color:var(--text3);margin-top:2px}
+.em-toolbar{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow);padding:9px 13px;display:flex;align-items:center;gap:8px;margin-bottom:11px}
+.em-srch{flex:1;display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);padding:5px 10px}
+.em-srch input{background:none;border:none;outline:none;font-size:12.5px;font-family:inherit;color:var(--text);width:100%}
+.exam-card{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow);padding:13px 15px;margin-bottom:9px;display:flex;align-items:center;gap:11px;transition:box-shadow .15s}
+.exam-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.exam-bar{width:4px;height:42px;border-radius:2px;flex-shrink:0}
+.exam-info{flex:1;min-width:0}
+.exam-name{font-size:13.5px;font-weight:600;color:var(--text)}
+.exam-meta{font-size:11px;color:var(--text3);margin-top:1px}
+.exam-acts{display:flex;align-items:center;gap:7px;flex-shrink:0}
+
+/* ── QB ── */
+.qb-layout{display:grid;grid-template-columns:1fr 280px;gap:12px;flex:1;overflow:hidden}
+.qb-main{display:flex;flex-direction:column;gap:9px;overflow:hidden}
+.qb-side{display:flex;flex-direction:column;gap:9px;overflow-y:auto}
+.qb-toolbar{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow);padding:9px 13px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.files-card{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden;margin-bottom:11px}
+.files-hdr{padding:11px 14px;display:flex;align-items:center;justify-content:space-between;background:#fffbeb;border-bottom:1px solid var(--border)}
+.files-cnt{font-size:11px;color:var(--text3);background:var(--bg);padding:3px 8px;border-radius:12px;border:1px solid var(--border)}
+.bulk-bar{display:none;align-items:center;gap:8px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:var(--rs);padding:6px 12px;margin-bottom:8px}
+.bulk-bar.show{display:flex}
+.bulk-info{font-size:12.5px;font-weight:600;color:var(--primary)}
+
+/* ── UA ── */
+.ua-layout{display:grid;grid-template-columns:1fr 300px;gap:12px;flex:1;overflow:hidden}
+.ua-left{overflow-y:auto}
+.ua-right{display:flex;flex-direction:column;gap:9px;overflow-y:auto}
+.fg{margin-bottom:11px}
+.fg label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:4px}
+.req{color:var(--danger)}
+.finput{width:100%;padding:7px 10px;border:1.5px solid var(--border);border-radius:var(--rs);font-size:12.5px;font-family:inherit;color:var(--text);background:#fff;outline:none;transition:border-color .15s}
+.finput:focus{border-color:var(--primary)}
+select.finput{cursor:pointer}
+
+/* ── SETTINGS ── */
+.ss{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow);padding:16px 18px;margin-bottom:11px}
+.ss-title{font-size:13.5px;font-weight:700;margin-bottom:13px;padding-bottom:9px;border-bottom:1px solid var(--border)}
+
+/* ── RESULTS ── */
+.res-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+
+/* ── MODALS ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center}
+.overlay.open{display:flex}
+.mbox{background:#fff;border-radius:12px;padding:22px;width:430px;box-shadow:0 20px 60px rgba(0,0,0,.2);max-height:90vh;overflow-y:auto}
+.mhdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.mtitle{font-size:15px;font-weight:700}
+.mclose{background:none;border:none;font-size:20px;cursor:pointer;color:var(--text3);line-height:1;padding:2px}
+.mclose:hover{color:var(--text)}
+
+/* ── TOAST ── */
+.toast-wrap{position:fixed;top:14px;right:14px;z-index:999;display:flex;flex-direction:column;gap:7px;pointer-events:none}
+.tst{background:#1e293b;color:#fff;padding:10px 14px;border-radius:8px;font-size:12.5px;font-weight:500;box-shadow:0 4px 16px rgba(0,0,0,.2);display:flex;align-items:center;gap:8px;pointer-events:all;animation:sin .2s ease;max-width:300px}
+.tst.success{background:#065f46;border-left:3px solid var(--success)}
+.tst.danger{background:#7f1d1d;border-left:3px solid var(--danger)}
+.tst.info{background:#1e3a5f;border-left:3px solid var(--primary)}
+@keyframes sin{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes sout{from{opacity:1}to{opacity:0;transform:translateX(10px)}}
+
+/* ── SCROLL ── */
+.scroll{overflow-y:auto;flex:1}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:28px;color:var(--text3)}
+.empty .ei{font-size:34px;margin-bottom:7px}
+.empty p{font-size:12.5px}
+
+/* ── NUM LINK ── */
+.nlink{color:var(--primary);font-weight:600;cursor:pointer}
+.nlink:hover{text-decoration:underline}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .charts-row{grid-template-columns:1fr}
+  .bottom-row{grid-template-columns:1fr}
+  .trk-stats{grid-template-columns:repeat(3,1fr)}
+  .em-stats{grid-template-columns:repeat(2,1fr)}
+  .qb-layout{grid-template-columns:1fr}
+  .ua-layout{grid-template-columns:1fr}
+  .res-stats{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:768px){
+  .sidebar{width:56px;min-width:56px}
+  .sb-logo .logo-text,.nav-item span:not(.nav-icon),.nav-badge,.user-info,.sb-logout{display:none}
+  .sb-logo{justify-content:center;padding:12px 6px}
+  .nav-item{justify-content:center;padding:10px 6px}
+  .nav-icon{width:auto;font-size:18px}
+  .sb-foot{justify-content:center}
+  .hdr-search{min-width:120px;max-width:140px}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .timer{display:none}
+}
+</style>
+
+<style>
+body{
+background:#f4f7fc !important;
+color:#1e293b !important;
+overflow-x:hidden !important;
+}
+
+.sidebar{
+background:linear-gradient(180deg,#2563eb 0%,#1d4ed8 100%) !important;
+box-shadow:4px 0 20px rgba(37,99,235,0.12);
+}
+
+.sidebar a,
+.sidebar h1,
+.sidebar h2,
+.sidebar h3,
+.sidebar span{
+color:white !important;
+}
+
+.main-content,.content,.main{
+background:#f4f7fc !important;
+padding:20px !important;
+}
+
+.card,.stat-card,.table-card,.content-card{
+background:white !important;
+border-radius:18px !important;
+border:1px solid #e2e8f0 !important;
+box-shadow:0 6px 24px rgba(15,23,42,0.06) !important;
+}
+
+.topbar,.navbar,.header{
+background:white !important;
+border-bottom:1px solid #e2e8f0 !important;
+box-shadow:0 2px 10px rgba(0,0,0,0.03);
+}
+
+button,.btn{
+background:linear-gradient(135deg,#2563eb,#4f46e5) !important;
+border:none !important;
+border-radius:10px !important;
+color:white !important;
+font-weight:600 !important;
+}
+
+input,select,textarea{
+border:1px solid #cbd5e1 !important;
+border-radius:10px !important;
+background:white !important;
+}
+
+table{
+background:white !important;
+}
+
+th{
+background:#eff6ff !important;
+color:#1e293b !important;
+}
+
+*{
+max-width:100%;
+box-sizing:border-box;
+}
+
+@media(max-width:768px){
+.sidebar{
+position:fixed !important;
+z-index:999;
+}
+
+.main-content,.content,.main{
+padding:12px !important;
+}
+}
+</style>
+
+</head>
+<body>
+
+<div class="toast-wrap" id="tc"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="logo-icon">🗂️</div>
+    <div class="logo-text"><div class="brand"><span>SEB</span>Portal</div><div class="sub">Admin Console</div></div>
+  </div>
+  <nav class="sb-nav">
+    <span class="nav-lbl">Main</span>
+    <div class="nav-item active" onclick="nav('dashboard',this)"><span class="nav-icon">🏠</span><span>Dashboard</span></div>
+    <div class="nav-item" onclick="nav('exammanager',this)"><span class="nav-icon">📋</span><span>Exam Manager</span><span class="nav-badge">3</span></div>
+    <div class="nav-item" onclick="nav('students',this)"><span class="nav-icon">👥</span><span>Students</span><span class="nav-badge">8</span></div>
+    <div class="nav-item" onclick="nav('results',this)"><span class="nav-icon">📊</span><span>Results</span></div>
+    <div class="nav-item" onclick="nav('questionbank',this)"><span class="nav-icon">🗃️</span><span>Question Bank</span><span class="nav-badge green">QB</span></div>
+    <span class="nav-lbl">Control</span>
+    <div class="nav-item" onclick="nav('useraccess',this)"><span class="nav-icon">🔑</span><span>User IDs & Access</span></div>
+    <div class="nav-item" onclick="nav('settings',this)"><span class="nav-icon">⚙️</span><span>Settings</span></div>
+  </nav>
+  <div class="sb-foot">
+    <div class="user-av">SU</div>
+    <div class="user-info"><div class="name">Super Admin</div><div class="email">admin@sebportal.in</div></div>
+    <button class="sb-logout" onclick="doLogout()" title="Logout">⏻</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- ══════════ DASHBOARD ══════════ -->
+<div class="page active" id="page-dashboard">
+  <div class="hdr">
+    <div class="hdr-title"><h1>Dashboard</h1><p id="today-date">Thursday, 7 May 2026</p></div>
+    <div class="hdr-space"></div>
+    <div class="hdr-actions">
+      <span class="chip chip-green"><span class="sdot"></span>Super Admin</span>
+      <span class="timer" id="dash-timer">00:00</span>
+      <span class="chip chip-live" onclick="nav('exammanager',null)"><span class="ldot"></span>3 Live</span>
+      <div class="hdr-search"><span style="color:var(--text3);font-size:13px">🔍</span><input type="text" placeholder="Search..." oninput="globalSearch(this.value)"></div>
+      <button class="btn btn-o btn-icon" onclick="doLogout()" title="Logout">⏻</button>
+    </div>
+  </div>
+  <div class="content scroll">
+    <div class="stats-grid">
+      <div class="stat-card sc-pu"><div class="stat-top"><div class="stat-ico si-pu">👥</div><span class="sbadge sbadge-up">↑ 12%</span></div><div class="stat-val sv-pu">1,247</div><div class="stat-lbl">Total Students</div></div>
+      <div class="stat-card sc-te"><div class="stat-top"><div class="stat-ico si-te">📋</div><span class="sbadge sbadge-lv">● 3 Live</span></div><div class="stat-val sv-te">8</div><div class="stat-lbl">Total Exams</div></div>
+      <div class="stat-card sc-bl"><div class="stat-top"><div class="stat-ico si-bl">📈</div><span class="sbadge sbadge-up">↑ 4%</span></div><div class="stat-val sv-bl">78%</div><div class="stat-lbl">Pass Rate</div></div>
+      <div class="stat-card sc-am"><div class="stat-top"><div class="stat-ico si-am">⏳</div><span class="sbadge sbadge-dn">↓ 2</span></div><div class="stat-val sv-am">14</div><div class="stat-lbl">Pending Results</div></div>
+    </div>
+    <div class="charts-row">
+      <div class="card">
+        <div class="card-hdr">
+          <div><div class="card-title">Score Trend — Last 7 Days</div><div class="card-sub">Average score across all exams</div></div>
+          <div class="chart-filters">
+            <button class="fbtn active" onclick="setChart(this,'#2563eb')">All</button>
+            <button class="fbtn" onclick="setChart(this,'#8b5cf6')">Physics</button>
+            <button class="fbtn" onclick="setChart(this,'#10b981')">CS</button>
+            <button class="fbtn" onclick="setChart(this,'#f59e0b')">Maths</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="chart-area"><svg viewBox="0 0 640 148" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2563eb" stop-opacity=".15"/><stop offset="100%" stop-color="#2563eb" stop-opacity="0"/></linearGradient></defs>
+            <line x1="0" y1="130" x2="640" y2="130" stroke="#e2e8f0" stroke-width="1"/>
+            <line x1="0" y1="104" x2="640" y2="104" stroke="#e2e8f0" stroke-width=".5" stroke-dasharray="3,3"/>
+            <line x1="0" y1="78" x2="640" y2="78" stroke="#e2e8f0" stroke-width=".5" stroke-dasharray="3,3"/>
+            <line x1="0" y1="52" x2="640" y2="52" stroke="#e2e8f0" stroke-width=".5" stroke-dasharray="3,3"/>
+            <line x1="0" y1="26" x2="640" y2="26" stroke="#e2e8f0" stroke-width=".5" stroke-dasharray="3,3"/>
+            <text x="2" y="9" fill="#94a3b8" font-size="8">100%</text><text x="2" y="35" fill="#94a3b8" font-size="8">80%</text><text x="2" y="61" fill="#94a3b8" font-size="8">60%</text><text x="2" y="87" fill="#94a3b8" font-size="8">40%</text><text x="2" y="113" fill="#94a3b8" font-size="8">20%</text>
+            <path id="cp" d="M 55 42 C 85 42 95 68 125 85 C 155 102 165 128 195 130 C 230 132 240 128 270 128 C 305 128 320 36 360 20 C 400 4 410 20 445 24 C 480 28 490 24 520 20 C 550 16 580 14 620 12" fill="url(#cg)" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="55" cy="42" r="3.5" fill="#2563eb"/><circle cx="125" cy="85" r="3.5" fill="#2563eb"/><circle cx="195" cy="130" r="3.5" fill="#2563eb"/><circle cx="270" cy="128" r="3.5" fill="#2563eb"/><circle cx="360" cy="20" r="3.5" fill="#2563eb"/><circle cx="445" cy="24" r="3.5" fill="#2563eb"/><circle cx="620" cy="12" r="3.5" fill="#2563eb"/>
+            <text x="40" y="143" fill="#94a3b8" font-size="7.5">1 May</text><text x="110" y="143" fill="#94a3b8" font-size="7.5">2 May</text><text x="180" y="143" fill="#94a3b8" font-size="7.5">3 May</text><text x="255" y="143" fill="#94a3b8" font-size="7.5">4 May</text><text x="346" y="143" fill="#94a3b8" font-size="7.5">5 May</text><text x="430" y="143" fill="#94a3b8" font-size="7.5">6 May</text><text x="605" y="143" fill="#94a3b8" font-size="7.5">7 May</text>
+          </svg></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hdr"><div class="card-title">Live Activity</div></div>
+        <div class="card-body">
+          <div class="live-nums">
+            <div class="lnum-card lnc-g"><div class="lnum ln-g" id="lo">239</div><div class="lnum-lbl">Online</div></div>
+            <div class="lnum-card lnc-b"><div class="lnum ln-b" id="ls">191</div><div class="lnum-lbl">Submitted</div></div>
+          </div>
+          <div class="subj-row"><div class="subj-nm">Physics</div><div class="pbar"><div class="pfill" style="width:78%;background:#8b5cf6"></div></div><div class="spct" style="color:#8b5cf6">78%</div></div>
+          <div class="subj-row"><div class="subj-nm">Maths</div><div class="pbar"><div class="pfill" style="width:72%;background:#14b8a6"></div></div><div class="spct" style="color:#14b8a6">72%</div></div>
+          <div class="subj-row"><div class="subj-nm">Chemistry</div><div class="pbar"><div class="pfill" style="width:65%;background:#10b981"></div></div><div class="spct" style="color:#10b981">65%</div></div>
+          <div class="subj-row"><div class="subj-nm">English</div><div class="pbar"><div class="pfill" style="width:84%;background:#f59e0b"></div></div><div class="spct" style="color:#f59e0b">84%</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-row">
+      <div class="card">
+        <div class="card-hdr"><div class="card-title">Recent Exams</div><button class="btn btn-o btn-sm" onclick="nav('exammanager',null)">View All →</button></div>
+        <table><thead><tr><th>Exam</th><th>Students</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>Mid-Term Physics</td><td>142</td><td><span class="pill pl">● Live</span></td><td><button class="btn btn-d btn-sm" onclick="endExam('Mid-Term Physics')">End</button></td></tr>
+          <tr><td>Calculus Final</td><td>98</td><td><span class="pill pl">● Live</span></td><td><button class="btn btn-d btn-sm" onclick="endExam('Calculus Final')">End</button></td></tr>
+          <tr><td>English Literature</td><td>203</td><td><span class="pill ps">⏳ Scheduled</span></td><td><button class="btn btn-p btn-sm" onclick="startExam('English Literature')">Start</button></td></tr>
+        </tbody></table>
+      </div>
+      <div class="card">
+        <div class="card-hdr"><div class="card-title">Upcoming Exams</div></div>
+        <div class="card-body">
+          <div class="upcoming-item"><div class="date-box"><div class="day">14</div><div class="mon">APR</div></div><div><div style="font-size:12.5px;font-weight:600">Organic Chemistry</div><div style="font-size:11px;color:var(--text3)">176 students · 150m</div></div></div>
+          <div class="upcoming-item"><div class="date-box"><div class="day">15</div><div class="mon">APR</div></div><div><div style="font-size:12.5px;font-weight:600">Biology Semester</div><div style="font-size:11px;color:var(--text3)">156 students · 120m</div></div></div>
+          <div class="upcoming-item"><div class="date-box"><div class="day">18</div><div class="mon">APR</div></div><div><div style="font-size:12.5px;font-weight:600">World History</div><div style="font-size:11px;color:var(--text3)">115 students · 90m</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ EXAM MANAGER ══════════ -->
+<div class="page" id="page-exammanager">
+  <div class="hdr">
+    <div class="hdr-title"><h1>Exam Manager</h1><p>Create and manage exams</p></div>
+    <div class="hdr-space"></div>
+    <div class="hdr-actions">
+      <span class="chip chip-green"><span class="sdot"></span>Super Admin</span>
+      <span class="timer">00:00</span>
+      <span class="chip chip-live"><span class="ldot"></span>3 Live</span>
+      <div class="hdr-search"><span style="color:var(--text3)">🔍</span><input type="text" placeholder="Search exams..." oninput="filterExams(this.value)"></div>
+      <button class="btn btn-p" onclick="openM('m-new-exam')">➕ New Exam</button>
+      <button class="btn btn-o btn-sm" onclick="csvDownload([['Exam','Students','Department','Batch','Date','Status'],['Mid-Term Physics',142,'Physics','2022-2026','2025-04-11','Live'],['Calculus Final',98,'Maths','2021-2025','2025-04-11','Live'],['English Literature',203,'English','2022-2026','2025-04-11','Live'],['Organic Chemistry',176,'Chemistry','2023-2027','2025-04-14','Upcoming'],['Data Structures',89,'CS','2022-2026','2025-04-09','Upcoming'],['Biology Semester',156,'Biology','2023-2027','2025-04-15','Completed']],'exams.csv')">📥 Export</button>
+      <button class="btn btn-o btn-icon" onclick="doLogout()">⏻</button>
+    </div>
+  </div>
+  <div class="content scroll">
+    <div class="em-stats">
+      <div class="em-stat"><div class="ev" style="color:var(--success)">3</div><div class="el">Live Now</div></div>
+      <div class="em-stat"><div class="ev" style="color:var(--warning)">2</div><div class="el">Upcoming</div></div>
+      <div class="em-stat"><div class="ev" style="color:var(--primary)">1,079</div><div class="el">Total Students</div></div>
+      <div class="em-stat"><div class="ev" style="color:var(--purple)">8</div><div class="el">Total Exams</div></div>
+    </div>
+    <div class="em-toolbar">
+      <div class="em-srch"><span style="color:var(--text3)">🔍</span><input type="text" placeholder="Search exam name or department..." oninput="filterExams(this.value)"></div>
+      <select class="fsel" onchange="filterExamStatus(this.value)"><option value="">All Status</option><option value="live">Live</option><option value="upcoming">Upcoming</option><option value="done">Completed</option></select>
+      <select class="fsel" onchange="filterExamDept(this.value)"><option value="">All Depts</option><option>Physics</option><option>Maths</option><option>CS</option><option>Chemistry</option><option>Biology</option><option>History</option><option>English</option></select>
+      <button class="btn-reset" onclick="resetExamFilters()">↺ Reset</button>
+    </div>
+    <div id="em-list">
+      <div class="exam-card" data-status="live" data-dept="Physics"><div class="exam-bar" style="background:#8b5cf6"></div><div class="exam-info"><div class="exam-name">Mid-Term Physics</div><div class="exam-meta">142 students · 2022-2026 · Physics · 2025-04-11</div></div><span class="pill pl">● Live</span><div class="exam-acts"><button class="btn btn-o btn-sm" onclick="viewExam('Mid-Term Physics',142,'Physics','2022-2026','2025-04-11','Live','90')">View</button><button class="btn btn-w btn-sm" onclick="editExam('Mid-Term Physics')">Edit</button><button class="btn btn-d btn-sm" onclick="endExam('Mid-Term Physics')">End</button></div></div>
+      <div class="exam-card" data-status="live" data-dept="Maths"><div class="exam-bar" style="background:#14b8a6"></div><div class="exam-info"><div class="exam-name">Calculus Final</div><div class="exam-meta">98 students · 2021-2025 · Maths · 2025-04-11</div></div><span class="pill pl">● Live</span><div class="exam-acts"><button class="btn btn-o btn-sm" onclick="viewExam('Calculus Final',98,'Maths','2021-2025','2025-04-11','Live','120')">View</button><button class="btn btn-w btn-sm" onclick="editExam('Calculus Final')">Edit</button><button class="btn btn-d btn-sm" onclick="endExam('Calculus Final')">End</button></div></div>
+      <div class="exam-card" data-status="live" data-dept="English"><div class="exam-bar" style="background:#f59e0b"></div><div class="exam-info"><div class="exam-name">English Literature</div><div class="exam-meta">203 students · 2022-2026 · English · 2025-04-11</div></div><span class="pill pl">● Live</span><div class="exam-acts"><button class="btn btn-o btn-sm" onclick="viewExam('English Literature',203,'English','2022-2026','2025-04-11','Live','90')">View</button><button class="btn btn-w btn-sm" onclick="editExam('English Literature')">Edit</button><button class="btn btn-d btn-sm" onclick="endExam('English Literature')">End</button></div></div>
+      <div class="exam-card" data-status="upcoming" data-dept="Chemistry"><div class="exam-bar" style="background:#10b981"></div><div class="exam-info"><div class="exam-name">Organic Chemistry</div><div class="exam-meta">176 students · 2023-2027 · Chemistry · 2025-04-14</div></div><span class="pill ps">⏳ Upcoming</span><div class="exam-acts"><button class="btn btn-o btn-sm" onclick="viewExam('Organic Chemistry',176,'Chemistry','2023-2027','2025-04-14','Upcoming','150')">View</button><button class="btn btn-w btn-sm" onclick="editExam('Organic Chemistry')">Edit</button><button class="btn btn-p btn-sm" onclick="startExam('Organic Chemistry')">Start</button></div></div>
+      <div class="exam-card" data-status="upcoming" data-dept="CS"><div class="exam-bar" style="background:#2563eb"></div><div class="exam-info"><div class="exam-name">Data Structures</div><div class="exam-meta">89 students · 2022-2026 · CS · 2025-04-09</div></div><span class="pill ps">⏳ Upcoming</span><div class="exam-acts"><button class="btn btn-o btn-sm" onclick="viewExam('Data Structures',89,'CS','2022-2026','2025-04-09','Upcoming','60')">View</button><button class="btn btn-w btn-sm" onclick="editExam('Data Structures')">Edit</button><button class="btn btn-p btn-sm" onclick="startExam('Data Structures')">Start</button></div></div>
+      <div class="exam-card" data-status="done" data-dept="Biology"><div class="exam-bar" style="background:#a3e635"></div><div class="exam-info"><div class="exam-name">Biology Semester</div><div class="exam-meta">156 students · 2023-2027 · Biology · 2025-04-15</div></div><span class="pill pd">✓ Completed</span><div class="exam-acts"><button class="btn btn-o btn-sm" onclick="viewExam('Biology Semester',156,'Biology','2023-2027','2025-04-15','Completed','120')">View Results</button><button class="btn btn-d btn-sm" onclick="deleteExamCard(this,'Biology Semester')">Delete</button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ STUDENTS ══════════ -->
+<div class="page" id="page-students">
+  <div class="hdr">
+    <div class="hdr-title"><h1>Students</h1><p>Exam-wise student management</p></div>
+    <div class="hdr-space"></div>
+    <div class="hdr-actions">
+      <span class="chip chip-green"><span class="sdot"></span>Super Admin</span>
+      <span class="timer">00:00</span>
+      <span class="chip chip-live"><span class="ldot"></span>3 Live</span>
+      <button class="btn btn-p" onclick="openM('m-add-student')">➕ Add Student</button>
+      <button class="btn btn-o btn-icon" onclick="doLogout()">⏻</button>
+    </div>
+  </div>
+  <div class="content scroll">
+    <div class="tracking-bar">
+      <div class="trk-hdr">
+        <div><div style="font-size:13px;font-weight:700">📊 Live Student Tracking</div><div style="font-size:10.5px;color:var(--text3)">Real-time overview across all active exams</div></div>
+        <span class="pill pl">● Live</span>
+      </div>
+      <div class="trk-stats">
+        <div class="trk-stat"><div class="val" style="color:var(--purple)">1,247</div><div class="lbl">Total Registered</div></div>
+        <div class="trk-stat"><div class="val" style="color:var(--success)" id="slc">230</div><div class="lbl">Attending Now</div></div>
+        <div class="trk-stat"><div class="val" style="color:var(--warning)">202</div><div class="lbl">Yet to Start</div></div>
+        <div class="trk-stat"><div class="val" style="color:var(--primary)">229</div><div class="lbl">Completed</div></div>
+        <div class="trk-stat"><div class="val" style="color:var(--danger)">617</div><div class="lbl">Yet to Complete</div></div>
+      </div>
+    </div>
+    <div class="filter-bar">
+      <span class="flbl">Filter:</span>
+      <select class="fsel" id="sf-dept" onchange="filterStudents()"><option value="">All Departments</option><option>Physics</option><option>Maths</option><option>CS</option><option>Chemistry</option><option>Biology</option><option>History</option><option>English</option></select>
+      <select class="fsel" id="sf-batch" onchange="filterStudents()"><option value="">All Batches</option><option>2022-2026</option><option>2021-2025</option><option>2023-2027</option></select>
+      <select class="fsel" id="sf-acc" onchange="filterStudents()"><option value="">All Access</option><option value="Enabled">Enabled</option><option value="Restricted">Restricted</option></select>
+      <button class="btn-reset" onclick="resetStuFilters()">↺ Reset</button>
+      <span style="margin-left:auto;font-size:11.5px;color:var(--text3)" id="stu-cnt">7 exams</span>
+    </div>
+    <div class="table-card">
+      <table>
+        <thead><tr><th><input type="checkbox" id="sa" onchange="selAll('sa','.sc')"></th><th>Exam Name</th><th>Students</th><th>Batch</th><th>Date</th><th>Department</th><th>Access</th><th>Actions</th></tr></thead>
+        <tbody id="stb">
+          <tr data-dept="Physics" data-batch="2022-2026" data-access="Enabled"><td><input type="checkbox" class="sc"></td><td>Mid-Term Physics</td><td><span class="nlink" onclick="viewStuDetail('Mid-Term Physics',142)">142</span></td><td>2022-2026</td><td>2025-04-11</td><td><span class="dtag" style="background:#f5f3ff;color:#7c3aed">Physics</span></td><td><div style="display:flex;align-items:center;gap:6px"><span class="toggle" onclick="togAcc(this)"></span><span class="albl">Enabled</span></div></td><td><div style="display:flex;gap:4px"><button class="btn btn-s btn-xs" onclick="admitRow(this)">Admit</button><button class="btn btn-d btn-xs" onclick="restrictRow(this)">Restrict</button></div></td></tr>
+          <tr data-dept="Maths" data-batch="2021-2025" data-access="Enabled"><td><input type="checkbox" class="sc"></td><td>Calculus Final</td><td><span class="nlink" onclick="viewStuDetail('Calculus Final',98)">98</span></td><td>2021-2025</td><td>2025-04-11</td><td><span class="dtag" style="background:#ecfdf5;color:#047857">Maths</span></td><td><div style="display:flex;align-items:center;gap:6px"><span class="toggle" onclick="togAcc(this)"></span><span class="albl">Enabled</span></div></td><td><div style="display:flex;gap:4px"><button class="btn btn-s btn-xs" onclick="admitRow(this)">Admit</button><button class="btn btn-d btn-xs" onclick="restrictRow(this)">Restrict</button></div></td></tr>
+          <tr data-dept="English" data-batch="2022-2026" data-access="Enabled"><td><input type="checkbox" class="sc"></td><td>English Literature</td><td><span class="nlink" onclick="viewStuDetail('English Literature',203)">203</span></td><td>2022-2026</td><td>2025-04-11</td><td><span class="dtag" style="background:#fffbeb;color:#92400e">English</span></td><td><div style="display:flex;align-items:center;gap:6px"><span class="toggle" onclick="togAcc(this)"></span><span class="albl">Enabled</span></div></td><td><div style="display:flex;gap:4px"><button class="btn btn-s btn-xs" onclick="admitRow(this)">Admit</button><button class="btn btn-d btn-xs" onclick="restrictRow(this)">Restrict</button></div></td></tr>
+          <tr data-dept="Chemistry" data-batch="2023-2027" data-access="Enabled"><td><input type="checkbox" class="sc"></td><td>Organic Chemistry</td><td><span class="nlink" onclick="viewStuDetail('Organic Chemistry',176)">176</span></td><td>2023-2027</td><td>2025-04-14</td><td><span class="dtag" style="background:#ecfdf5;color:#065f46">Chemistry</span></td><td><div style="display:flex;align-items:center;gap:6px"><span class="toggle" onclick="togAcc(this)"></span><span class="albl">Enabled</span></div></td><td><div style="display:flex;gap:4px"><button class="btn btn-s btn-xs" onclick="admitRow(this)">Admit</button><button class="btn btn-d btn-xs" onclick="restrictRow(this)">Restrict</button></div></td></tr>
+          <tr data-dept="History" data-batch="2021-2025" data-access="Restricted"><td><input type="checkbox" class="sc"></td><td>World History</td><td><span class="nlink" onclick="viewStuDetail('World History',115)">115</span></td><td>2021-2025</td><td>2025-04-10</td><td><span class="dtag" style="background:#fef3c7;color:#92400e">History</span></td><td><div style="display:flex;align-items:center;gap:6px"><span class="toggle off" onclick="togAcc(this)"></span><span class="albl">Restricted</span></div></td><td><div style="display:flex;gap:4px"><button class="btn btn-s btn-xs" onclick="admitRow(this)">Admit</button><button class="btn btn-d btn-xs" onclick="restrictRow(this)">Restrict</button></div></td></tr>
+          <tr data-dept="CS" data-batch="2022-2026" data-access="Enabled"><td><input type="checkbox" class="sc"></td><td>Data Structures</td><td><span class="nlink" onclick="viewStuDetail('Data Structures',89)">89</span></td><td>2022-2026</td><td>2025-04-09</td><td><span class="dtag" style="background:#eff6ff;color:#1d4ed8">CS</span></td><td><div style="display:flex;align-items:center;gap:6px"><span class="toggle" onclick="togAcc(this)"></span><span class="albl">Enabled</span></div></td><td><div style="display:flex;gap:4px"><button class="btn btn-s btn-xs" onclick="admitRow(this)">Admit</button><button class="btn btn-d btn-xs" onclick="restrictRow(this)">Restrict</button></div></td></tr>
+          <tr data-dept="Biology" data-batch="2023-2027" data-access="Enabled"><td><input type="checkbox" class="sc"></td><td>Biology Semester</td><td><span class="nlink" onclick="viewStuDetail('Biology Semester',156)">156</span></td><td>2023-2027</td><td>2025-04-15</td><td><span class="dtag" style="background:#f0fdf4;color:#166534">Biology</span></td><td><div style="display:flex;align-items:center;gap:6px"><span class="toggle" onclick="togAcc(this)"></span><span class="albl">Enabled</span></div></td><td><div style="display:flex;gap:4px"><button class="btn btn-s btn-xs" onclick="admitRow(this)">Admit</button><button class="btn btn-d btn-xs" onclick="restrictRow(this)">Restrict</button></div></td></tr>
+        </tbody>
+      </table>
+      <div class="tfoot">
+        <span class="tfoot-info" id="stu-foot">7 exams shown</span>
+        <div style="display:flex;align-items:center;gap:9px">
+          <div class="pagination"><button class="pg-btn active">1</button><button class="pg-btn" onclick="toast('No more pages','info')">2</button><button class="pg-btn" onclick="toast('No more pages','info')">›</button></div>
+          <button class="btn btn-o btn-sm" onclick="exportStudentsCSV()">📥 Export CSV</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ RESULTS ══════════ -->
+<div class="page" id="page-results">
+  <div class="hdr">
+    <div class="hdr-title"><h1>Results</h1><p>View and publish exam results</p></div>
+    <div class="hdr-space"></div>
+    <div class="hdr-actions">
+      <span class="chip chip-green"><span class="sdot"></span>Super Admin</span>
+      <span class="timer">00:00</span>
+      <span class="chip chip-live"><span class="ldot"></span>3 Live</span>
+      <div class="hdr-search"><span style="color:var(--text3)">🔍</span><input type="text" placeholder="Search results..." oninput="filterResults(this.value)"></div>
+      <button class="btn btn-o btn-sm" onclick="exportResultsCSV()">📥 Export CSV</button>
+      <button class="btn btn-p" onclick="publishAll()">📢 Publish All</button>
+      <button class="btn btn-o btn-icon" onclick="doLogout()">⏻</button>
+    </div>
+  </div>
+  <div class="content scroll">
+    <div class="res-stats">
+      <div class="em-stat"><div class="ev" style="color:var(--primary)">1,024</div><div class="el">Total Evaluated</div></div>
+      <div class="em-stat"><div class="ev" style="color:var(--success)">78%</div><div class="el">Pass Rate</div></div>
+      <div class="em-stat"><div class="ev" style="color:var(--warning)" id="pending-cnt">3</div><div class="el">Pending</div></div>
+      <div class="em-stat"><div class="ev" style="color:var(--purple)">74%</div><div class="el">Avg Score</div></div>
+    </div>
+    <div class="table-card">
+      <table>
+        <thead><tr><th>Exam</th><th>Students</th><th>Avg Score</th><th>Pass %</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="rtb">
+          <tr><td>Mid-Term Physics</td><td>142</td><td>74%</td><td>81%</td><td><span class="pill pa">✓ Published</span></td><td><button class="btn btn-o btn-sm" onclick="viewResultDetail('Mid-Term Physics',142,74,81)">View</button></td></tr>
+          <tr><td>Calculus Final</td><td>98</td><td>68%</td><td>72%</td><td><span class="pill ps">⏳ Pending</span></td><td><button class="btn btn-p btn-sm" onclick="publishOne(this,'Calculus Final')">Publish</button></td></tr>
+          <tr><td>Data Structures</td><td>89</td><td>82%</td><td>89%</td><td><span class="pill pa">✓ Published</span></td><td><button class="btn btn-o btn-sm" onclick="viewResultDetail('Data Structures',89,82,89)">View</button></td></tr>
+          <tr><td>English Literature</td><td>203</td><td>71%</td><td>76%</td><td><span class="pill ps">⏳ Pending</span></td><td><button class="btn btn-p btn-sm" onclick="publishOne(this,'English Literature')">Publish</button></td></tr>
+          <tr><td>World History</td><td>115</td><td>65%</td><td>68%</td><td><span class="pill ps">⏳ Pending</span></td><td><button class="btn btn-p btn-sm" onclick="publishOne(this,'World History')">Publish</button></td></tr>
+        </tbody>
+      </table>
+      <div class="tfoot">
+        <span class="tfoot-info">5 exams</span>
+        <button class="btn btn-o btn-sm" onclick="exportResultsCSV()">📥 Export CSV</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ QUESTION BANK ══════════ -->
+<div class="page" id="page-questionbank">
+  <div class="hdr">
+    <div class="hdr-title"><h1>Question Bank</h1><p>Manage and assign question sets</p></div>
+    <div class="hdr-space"></div>
+    <div class="hdr-actions">
+      <span class="chip chip-green"><span class="sdot"></span>Admin</span>
+      <span class="timer">00:00</span>
+      <span class="chip chip-live"><span class="ldot"></span>3 Live</span>
+      <button class="btn btn-p" onclick="document.getElementById('qfi').click()">📤 Upload File</button>
+      <input type="file" id="qfi" style="display:none" onchange="qbUpload(this)">
+      <button class="btn btn-o btn-icon" onclick="doLogout()">⏻</button>
+    </div>
+  </div>
+  <div class="content scroll">
+    <div class="files-card">
+      <div class="files-hdr">
+        <div><div style="font-size:12.5px;font-weight:700">📁 Uploaded Question Bank Files</div><div style="font-size:10.5px;color:var(--text3)">Files available for exam assignment</div></div>
+        <span class="files-cnt" id="qb-cnt">0 Files</span>
+      </div>
+      <div id="qb-fbody" style="padding:12px">
+        <div id="qb-empty" class="empty"><div class="ei">📭</div><p>No files uploaded yet.</p></div>
+        <table id="qb-ftbl" style="display:none">
+          <thead><tr><th>#</th><th>File Name</th><th>Subject</th><th>Set Tag</th><th>Size</th><th>Uploaded</th><th>Actions</th></tr></thead>
+          <tbody id="qb-frows"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="qb-layout">
+      <div class="qb-main">
+        <div class="qb-toolbar">
+          <input type="text" placeholder="🔍 Search questions..." style="flex:1;padding:6px 10px;border:1px solid var(--border);border-radius:var(--rs);font-size:12.5px;font-family:inherit;background:var(--bg);outline:none" oninput="filterQB(this.value)">
+          <select class="fsel" id="qbs" onchange="filterQBSubj(this.value)"><option value="">All Subjects</option><option>Physics</option><option>Mathematics</option><option>Chemistry</option><option>CS</option><option>English</option></select>
+          <select class="fsel" id="qbd" onchange="filterQBDiff(this.value)"><option value="">All Difficulty</option><option>Easy</option><option>Medium</option><option>Hard</option></select>
+          <button class="btn-reset" onclick="resetQBF()">↺ Reset</button>
+          <button class="btn btn-p btn-sm" onclick="bulkAssign()">📋 Bulk Assign</button>
+          <button class="btn btn-d btn-sm" onclick="bulkDel()">🗑 Bulk Delete</button>
+        </div>
+        <div class="bulk-bar" id="qb-bulk">
+          <span class="bulk-info" id="qb-selcnt">0 selected</span>
+          <button class="btn btn-p btn-sm" onclick="bulkAssign()">Assign Selected</button>
+          <button class="btn btn-d btn-sm" onclick="bulkDel()">Delete Selected</button>
+          <button class="btn-reset" onclick="clearQBSel()">✕ Clear</button>
+        </div>
+        <div class="table-card" style="flex:1;overflow:auto">
+          <table>
+            <thead><tr><th><input type="checkbox" id="qa" onchange="selAll('qa','.qc',updateQBSel)"></th><th>#</th><th>Topic</th><th>Type</th><th>Difficulty</th><th>Marks</th><th>Set</th><th>Actions</th></tr></thead>
+            <tbody id="qb-tb">
+              <tr><td><input type="checkbox" class="qc" onchange="updateQBSel()"></td><td>1</td><td>Kinematics</td><td>MCQ</td><td style="color:var(--warning);font-weight:600">Medium</td><td>2</td><td style="color:var(--primary)">QS-Physics-2025-A</td><td><button class="btn btn-o btn-xs" onclick="editQ('Kinematics')">Edit</button> <button class="btn btn-d btn-xs" onclick="delQ(this,'Kinematics')">Del</button></td></tr>
+              <tr><td><input type="checkbox" class="qc" onchange="updateQBSel()"></td><td>2</td><td>Integration</td><td>MCQ</td><td style="color:var(--danger);font-weight:600">Hard</td><td>3</td><td style="color:var(--primary)">QS-Math-2025</td><td><button class="btn btn-o btn-xs" onclick="editQ('Integration')">Edit</button> <button class="btn btn-d btn-xs" onclick="delQ(this,'Integration')">Del</button></td></tr>
+              <tr><td><input type="checkbox" class="qc" onchange="updateQBSel()"></td><td>3</td><td>Organic Reactions</td><td>Short Ans</td><td style="color:var(--danger);font-weight:600">Hard</td><td>5</td><td style="color:var(--primary)">QS-Chem-2025</td><td><button class="btn btn-o btn-xs" onclick="editQ('Organic Reactions')">Edit</button> <button class="btn btn-d btn-xs" onclick="delQ(this,'Organic Reactions')">Del</button></td></tr>
+              <tr><td><input type="checkbox" class="qc" onchange="updateQBSel()"></td><td>4</td><td>Grammar Rules</td><td>MCQ</td><td style="color:var(--success);font-weight:600">Easy</td><td>1</td><td style="color:var(--primary)">QS-English-2025</td><td><button class="btn btn-o btn-xs" onclick="editQ('Grammar Rules')">Edit</button> <button class="btn btn-d btn-xs" onclick="delQ(this,'Grammar Rules')">Del</button></td></tr>
+              <tr><td><input type="checkbox" class="qc" onchange="updateQBSel()"></td><td>5</td><td>Arrays & Linked Lists</td><td>MCQ</td><td style="color:var(--warning);font-weight:600">Medium</td><td>2</td><td style="color:var(--primary)">QS-CS-2025</td><td><button class="btn btn-o btn-xs" onclick="editQ('Arrays & Linked Lists')">Edit</button> <button class="btn btn-d btn-xs" onclick="delQ(this,'Arrays & Linked Lists')">Del</button></td></tr>
+              <tr><td><input type="checkbox" class="qc" onchange="updateQBSel()"></td><td>6</td><td>Thermodynamics</td><td>Long Ans</td><td style="color:var(--danger);font-weight:600">Hard</td><td>8</td><td style="color:var(--primary)">QS-Physics-2025-B</td><td><button class="btn btn-o btn-xs" onclick="editQ('Thermodynamics')">Edit</button> <button class="btn btn-d btn-xs" onclick="delQ(this,'Thermodynamics')">Del</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="qb-side">
+        <div class="card">
+          <div class="card-hdr"><div class="card-title">QB Summary</div></div>
+          <div class="card-body">
+            <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:12.5px;color:var(--text2)">Total Questions</span><strong style="color:var(--primary)">1,204</strong></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:12.5px;color:var(--text2)">Physics</span><strong>312</strong></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:12.5px;color:var(--text2)">Mathematics</span><strong>298</strong></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:12.5px;color:var(--text2)">Chemistry</span><strong>187</strong></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0;margin-bottom:10px"><span style="font-size:12.5px;color:var(--text2)">CS</span><strong>264</strong></div>
+            <div class="subj-row"><div class="subj-nm" style="width:72px">MCQ</div><div class="pbar"><div class="pfill" style="width:68%;background:var(--primary)"></div></div><div class="spct" style="color:var(--primary)">68%</div></div>
+            <div class="subj-row"><div class="subj-nm" style="width:72px">Short Ans</div><div class="pbar"><div class="pfill" style="width:20%;background:var(--purple)"></div></div><div class="spct" style="color:var(--purple)">20%</div></div>
+            <div class="subj-row"><div class="subj-nm" style="width:72px">Long Ans</div><div class="pbar"><div class="pfill" style="width:12%;background:var(--warning)"></div></div><div class="spct" style="color:var(--warning)">12%</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><div class="card-title">Assign Set to Exam</div></div>
+          <div class="card-body">
+            <form onsubmit="assignSet(event)">
+              <div class="fg"><label>Question Set <span class="req">*</span></label><select class="finput" required><option value="">Select set...</option><option>QS-Physics-2025-A</option><option>QS-Math-2025</option><option>QS-Chem-2025</option><option>QS-CS-2025</option></select></div>
+              <div class="fg"><label>Assign to Exam <span class="req">*</span></label><select class="finput" required><option value="">Select exam...</option><option>Mid-Term Physics</option><option>Calculus Final</option><option>Organic Chemistry</option><option>Data Structures</option></select></div>
+              <button type="submit" class="btn btn-p" style="width:100%">Assign to Exam</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ USER IDs & ACCESS ══════════ -->
+<div class="page" id="page-useraccess">
+  <div class="hdr">
+    <div class="hdr-title"><h1>User IDs & Access</h1><p>Manage login credentials</p></div>
+    <div class="hdr-space"></div>
+    <div class="hdr-actions">
+      <span class="chip chip-green"><span class="sdot"></span>Admin</span>
+      <span class="timer">00:00</span>
+      <span class="chip chip-live"><span class="ldot"></span>3 Live</span>
+      <div class="hdr-search"><span style="color:var(--text3)">🔍</span><input type="text" placeholder="Search student..." oninput="filterCreds(this.value)"></div>
+      <button class="btn btn-o btn-sm" onclick="exportCredsCSV()">📥 Export CSV</button>
+      <button class="btn btn-d btn-sm" onclick="resetAllPw()">🔄 Reset All</button>
+      <button class="btn btn-o btn-icon" onclick="doLogout()">⏻</button>
+    </div>
+  </div>
+  <div class="content scroll">
+    <div class="ua-layout">
+      <div class="ua-left">
+        <div class="table-card">
+          <div style="padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;font-weight:700">Student Credentials</div>
+          <table>
+            <thead><tr><th>Name</th><th>User ID</th><th>Password</th><th>Last Login</th><th>Access</th><th>Actions</th></tr></thead>
+            <tbody id="ctb">
+              <tr><td>Ananya Singh</td><td style="font-family:'DM Mono',monospace;font-size:11.5px">STU2025001</td><td style="letter-spacing:2px;font-size:14px">••••••••</td><td style="font-size:11px;color:var(--text3)">Today 9:42 AM</td><td><span class="pill pa">● Active</span></td><td><button class="btn btn-o btn-xs" onclick="editCred('Ananya Singh','STU2025001')">Edit</button> <button class="btn btn-d btn-xs" onclick="disableUser(this,'Ananya Singh')">Disable</button></td></tr>
+              <tr><td>Rahul Verma</td><td style="font-family:'DM Mono',monospace;font-size:11.5px">STU2025002</td><td style="letter-spacing:2px;font-size:14px">••••••••</td><td style="font-size:11px;color:var(--text3)">Today 9:42 AM</td><td><span class="pill pa">● Active</span></td><td><button class="btn btn-o btn-xs" onclick="editCred('Rahul Verma','STU2025002')">Edit</button> <button class="btn btn-d btn-xs" onclick="disableUser(this,'Rahul Verma')">Disable</button></td></tr>
+              <tr><td>Meera Pillai</td><td style="font-family:'DM Mono',monospace;font-size:11.5px">STU2025003</td><td style="letter-spacing:2px;font-size:14px">••••••••</td><td style="font-size:11px;color:var(--text3)">Today 9:42 AM</td><td><span class="pill pa">● Active</span></td><td><button class="btn btn-o btn-xs" onclick="editCred('Meera Pillai','STU2025003')">Edit</button> <button class="btn btn-d btn-xs" onclick="disableUser(this,'Meera Pillai')">Disable</button></td></tr>
+              <tr><td>Arjun Mehta</td><td style="font-family:'DM Mono',monospace;font-size:11.5px">STU2025004</td><td style="letter-spacing:2px;font-size:14px">••••••••</td><td style="font-size:11px;color:var(--text3)">Today 9:42 AM</td><td><span class="pill pa">● Active</span></td><td><button class="btn btn-o btn-xs" onclick="editCred('Arjun Mehta','STU2025004')">Edit</button> <button class="btn btn-d btn-xs" onclick="disableUser(this,'Arjun Mehta')">Disable</button></td></tr>
+              <tr><td>Divya Rao</td><td style="font-family:'DM Mono',monospace;font-size:11.5px">STU2025005</td><td style="letter-spacing:2px;font-size:14px">••••••••</td><td style="font-size:11px;color:var(--text3)">Today 9:42 AM</td><td><span class="pill pdi">● Disabled</span></td><td><button class="btn btn-o btn-xs" onclick="editCred('Divya Rao','STU2025005')">Edit</button> <button class="btn btn-s btn-xs" onclick="enableUser(this,'Divya Rao')">Enable</button></td></tr>
+              <tr><td>Sai Krishna</td><td style="font-family:'DM Mono',monospace;font-size:11.5px">STU2025006</td><td style="letter-spacing:2px;font-size:14px">••••••••</td><td style="font-size:11px;color:var(--text3)">Today 9:42 AM</td><td><span class="pill pa">● Active</span></td><td><button class="btn btn-o btn-xs" onclick="editCred('Sai Krishna','STU2025006')">Edit</button> <button class="btn btn-d btn-xs" onclick="disableUser(this,'Sai Krishna')">Disable</button></td></tr>
+            </tbody>
+          </table>
+          <div class="tfoot"><span class="tfoot-info">6 students</span><button class="btn btn-o btn-sm" onclick="exportCredsCSV()">📥 Export CSV</button></div>
+        </div>
+      </div>
+      <div class="ua-right">
+        <div class="card">
+          <div class="card-hdr"><div class="card-title">Add Invigilator</div></div>
+          <div class="card-body">
+            <form onsubmit="addInvig(event)">
+              <div class="fg"><label>Full Name <span class="req">*</span></label><input class="finput" type="text" placeholder="Invigilator name" required minlength="2"></div>
+              <div class="fg"><label>Email <span class="req">*</span></label><input class="finput" type="email" placeholder="email@school.in" required></div>
+              <div class="fg"><label>Phone <span class="req">*</span></label><input class="finput" type="tel" placeholder="+91 XXXXX XXXXX" required></div>
+              <div class="fg"><label>Assign Exam <span class="req">*</span></label><select class="finput" required><option value="">Select exam...</option><option>Calculus Final</option><option>Mid-Term Physics</option><option>English Literature</option><option>Organic Chemistry</option></select></div>
+              <div class="fg"><label>Role <span class="req">*</span></label><select class="finput" required><option value="">Select role...</option><option>Invigilator</option><option>Chief Invigilator</option><option>Observer</option></select></div>
+              <button type="submit" class="btn btn-p" style="width:100%">Add Invigilator</button>
+            </form>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><div class="card-title">Reset Password</div></div>
+          <div class="card-body">
+            <form onsubmit="resetPw(event)">
+              <div class="fg"><label>Student ID <span class="req">*</span></label><input class="finput" type="text" id="rsid" value="STU2025001" required></div>
+              <div class="fg"><label>New Password <span class="req">*</span></label><input class="finput" type="password" id="rpw" placeholder="Min 8 characters" required minlength="8"></div>
+              <div class="fg"><label>Confirm Password <span class="req">*</span></label><input class="finput" type="password" id="rpw2" placeholder="Repeat password" required minlength="8"></div>
+              <button type="submit" class="btn btn-o" style="width:100%">Reset Password</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SETTINGS ══════════ -->
+<div class="page" id="page-settings">
+  <div class="hdr">
+    <div class="hdr-title"><h1>Settings</h1><p>Portal configuration</p></div>
+    <div class="hdr-space"></div>
+    <div class="hdr-actions">
+      <span class="chip chip-green"><span class="sdot"></span>Super Admin</span>
+      <button class="btn btn-p" onclick="saveSettings()">💾 Save Changes</button>
+      <button class="btn btn-o btn-icon" onclick="doLogout()">⏻</button>
+    </div>
+  </div>
+  <div class="content scroll">
+    <div class="ss"><div class="ss-title">General Settings</div>
+      <div class="fg"><label>Portal Name</label><input class="finput" type="text" value="SEB ExamPortal"></div>
+      <div class="fg"><label>Institution</label><input class="finput" type="text" value="Government Engineering College"></div>
+      <div class="fg"><label>Academic Year</label><select class="finput"><option>2025-2026</option><option>2024-2025</option></select></div>
+    </div>
+    <div class="ss"><div class="ss-title">Exam Defaults</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+        <div class="fg"><label>Default Duration (min)</label><input class="finput" type="number" value="90"></div>
+        <div class="fg"><label>Pass Percentage (%)</label><input class="finput" type="number" value="40"></div>
+        <div class="fg"><label>Auto-Submit on Timeout</label><select class="finput"><option>Yes</option><option>No</option></select></div>
+        <div class="fg"><label>Result Visibility</label><select class="finput"><option>After Publish</option><option>Immediate</option></select></div>
+      </div>
+    </div>
+    <div class="ss"><div class="ss-title">Notifications</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+        <div class="fg"><label>Email Notifications</label><select class="finput"><option>Enabled</option><option>Disabled</option></select></div>
+        <div class="fg"><label>Admin Email</label><input class="finput" type="email" value="admin@sebportal.in"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<!-- ══════ MODALS ══════ -->
+<div class="overlay" id="m-logout">
+  <div class="mbox" style="width:340px">
+    <div class="mhdr"><div class="mtitle">⏻ Confirm Logout</div><button class="mclose" onclick="closeM('m-logout')">✕</button></div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:18px">Are you sure you want to logout from SEB ExamPortal Admin Console?</p>
+    <div style="display:flex;gap:9px"><button class="btn btn-o" style="flex:1" onclick="closeM('m-logout')">Cancel</button><button class="btn btn-d" style="flex:1" onclick="confirmLogout()">Yes, Logout</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="m-add-student">
+  <div class="mbox">
+    <div class="mhdr"><div class="mtitle">➕ Add New Student</div><button class="mclose" onclick="closeM('m-add-student')">✕</button></div>
+    <form onsubmit="submitStudent(event)">
+      <div class="fg"><label>Full Name <span class="req">*</span></label><input class="finput" type="text" placeholder="Student full name" required></div>
+      <div class="fg"><label>Roll Number <span class="req">*</span></label><input class="finput" type="text" placeholder="e.g. 2022CS001" required></div>
+      <div class="fg"><label>Email <span class="req">*</span></label><input class="finput" type="email" placeholder="student@college.edu" required></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="fg"><label>Department <span class="req">*</span></label><select class="finput" required><option value="">Select...</option><option>Physics</option><option>Maths</option><option>CS</option><option>Chemistry</option><option>Biology</option><option>History</option><option>English</option></select></div>
+        <div class="fg"><label>Batch <span class="req">*</span></label><select class="finput" required><option value="">Select...</option><option>2022-2026</option><option>2021-2025</option><option>2023-2027</option><option>2024-2028</option></select></div>
+      </div>
+      <div style="display:flex;gap:9px;margin-top:4px"><button type="button" onclick="closeM('m-add-student')" class="btn btn-o" style="flex:1">Cancel</button><button type="submit" class="btn btn-p" style="flex:1">Add Student</button></div>
+    </form>
+  </div>
+</div>
+
+<div class="overlay" id="m-new-exam">
+  <div class="mbox">
+    <div class="mhdr"><div class="mtitle">📋 Create New Exam</div><button class="mclose" onclick="closeM('m-new-exam')">✕</button></div>
+    <form onsubmit="submitExam(event)">
+      <div class="fg"><label>Exam Name <span class="req">*</span></label><input class="finput" type="text" placeholder="e.g. Mid-Term Physics" required></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="fg"><label>Department <span class="req">*</span></label><select class="finput" required><option value="">Select...</option><option>Physics</option><option>Maths</option><option>CS</option><option>Chemistry</option><option>Biology</option></select></div>
+        <div class="fg"><label>Batch <span class="req">*</span></label><select class="finput" required><option value="">Select...</option><option>2022-2026</option><option>2021-2025</option><option>2023-2027</option></select></div>
+        <div class="fg"><label>Date <span class="req">*</span></label><input class="finput" type="date" required></div>
+        <div class="fg"><label>Duration (min) <span class="req">*</span></label><input class="finput" type="number" placeholder="90" required min="10"></div>
+      </div>
+      <div class="fg"><label>Total Marks <span class="req">*</span></label><input class="finput" type="number" placeholder="100" required min="1"></div>
+      <div style="display:flex;gap:9px;margin-top:4px"><button type="button" onclick="closeM('m-new-exam')" class="btn btn-o" style="flex:1">Cancel</button><button type="submit" class="btn btn-p" style="flex:1">Create Exam</button></div>
+    </form>
+  </div>
+</div>
+
+<div class="overlay" id="m-view-exam">
+  <div class="mbox">
+    <div class="mhdr"><div class="mtitle" id="vem-title">Exam Details</div><button class="mclose" onclick="closeM('m-view-exam')">✕</button></div>
+    <div id="vem-body" style="font-size:13px;color:var(--text2);line-height:1.9"></div>
+    <div style="margin-top:14px"><button class="btn btn-o" style="width:100%" onclick="closeM('m-view-exam')">Close</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="m-edit-cred">
+  <div class="mbox">
+    <div class="mhdr"><div class="mtitle" id="ec-title">Edit Student</div><button class="mclose" onclick="closeM('m-edit-cred')">✕</button></div>
+    <form onsubmit="saveCredEdit(event)">
+      <div class="fg"><label>Full Name <span class="req">*</span></label><input class="finput" type="text" id="ec-name" required></div>
+      <div class="fg"><label>User ID</label><input class="finput" type="text" id="ec-uid" readonly style="background:#f8fafc;color:var(--text3)"></div>
+      <div class="fg"><label>New Password</label><input class="finput" type="password" id="ec-pw" placeholder="Leave blank to keep current" minlength="8"></div>
+      <div class="fg"><label>Access Status <span class="req">*</span></label><select class="finput" id="ec-acc" required><option>Active</option><option>Disabled</option></select></div>
+      <div style="display:flex;gap:9px;margin-top:4px"><button type="button" onclick="closeM('m-edit-cred')" class="btn btn-o" style="flex:1">Cancel</button><button type="submit" class="btn btn-p" style="flex:1">Save Changes</button></div>
+    </form>
+  </div>
+</div>
+
+<script>
+/* ── CORE HELPERS ── */
+function toast(msg,type='success'){
+  const c=document.getElementById('tc');
+  const t=document.createElement('div');
+  t.className='tst '+type;
+  const ico={success:'✅',danger:'❌',info:'ℹ️'};
+  t.innerHTML=`<span>${ico[type]||'✅'}</span><span>${msg}</span>`;
+  c.appendChild(t);
+  setTimeout(()=>{t.style.animation='sout .3s ease forwards';setTimeout(()=>t.remove(),300)},3200);
+}
+
+function openM(id){document.getElementById(id).classList.add('open')}
+function closeM(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.overlay').forEach(o=>{o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open')})});
+
+/* ── CSV DOWNLOAD ── */
+function csvDownload(rows, filename){
+  const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=filename;a.click();
+  URL.revokeObjectURL(url);
+  toast('CSV downloaded: '+filename,'success');
+}
+
+/* ── NAVIGATION ── */
+function nav(page,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const t=document.getElementById('page-'+page);
+  if(t)t.classList.add('active');
+  if(el)el.classList.add('active');
+  else document.querySelectorAll('.nav-item').forEach(n=>{if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+page+"'"))n.classList.add('active')});
+}
+
+/* ── TIMER ── */
+let sec=0;
+setInterval(()=>{
+  sec++;
+  const m=String(Math.floor(sec/60)).padStart(2,'0'),s=String(sec%60).padStart(2,'0');
+  document.querySelectorAll('.timer').forEach(t=>t.textContent=m+':'+s);
+},1000);
+
+/* ── DATE ── */
+(()=>{
+  const n=new Date();
+  const D=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const M=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const el=document.getElementById('today-date');
+  if(el)el.textContent=D[n.getDay()]+', '+n.getDate()+' '+M[n.getMonth()]+' '+n.getFullYear();
+})();
+
+/* ── CHART FILTER ── */
+function setChart(btn,color){
+  btn.closest('.chart-filters').querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const p=document.getElementById('cp');
+  if(p){p.setAttribute('stroke',color);p.setAttribute('fill',`url(#cg)`);}
+  document.querySelectorAll('circle[r="3.5"]').forEach(c=>c.setAttribute('fill',color));
+}
+
+/* ── LOGOUT ── */
+function doLogout(){openM('m-logout')}
+function confirmLogout(){
+  closeM('m-logout');
+  toast('Logging out...','info');
+  setTimeout(()=>{
+    document.body.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#1e2d45;flex-direction:column;gap:14px;font-family:'DM Sans',sans-serif">
+      <div style="font-size:38px">🗂️</div>
+      <div style="font-size:22px;font-weight:700;color:#fff"><span style="color:#60a5fa">SEB</span>Portal</div>
+      <div style="font-size:13px;color:#a8bbd4">You have been logged out.</div>
+      <button onclick="location.reload()" style="margin-top:6px;padding:9px 22px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit">Login Again</button>
+    </div>`;
+  },800);
+}
+
+/* ── GLOBAL SEARCH ── */
+function globalSearch(val){if(val.trim())toast('Searching: "'+val+'"','info')}
+
+/* ── EXAM MANAGER ── */
+function filterExams(v){
+  const lv=v.toLowerCase();
+  document.querySelectorAll('#em-list .exam-card').forEach(c=>{c.style.display=c.textContent.toLowerCase().includes(lv)?'':'none'});
+}
+function filterExamStatus(v){document.querySelectorAll('#em-list .exam-card').forEach(c=>{c.style.display=(!v||c.dataset.status===v)?'':'none'})}
+function filterExamDept(v){document.querySelectorAll('#em-list .exam-card').forEach(c=>{c.style.display=(!v||c.dataset.dept===v)?'':'none'})}
+function resetExamFilters(){
+  document.querySelectorAll('#em-list .exam-card').forEach(c=>c.style.display='');
+  document.querySelectorAll('#page-exammanager .fsel').forEach(s=>s.value='');
+  toast('Filters reset','info');
+}
+function viewExam(name,students,dept,batch,date,status,dur){
+  document.getElementById('vem-title').textContent='📋 '+name;
+  document.getElementById('vem-body').innerHTML=`<table style="width:100%;border-collapse:collapse">
+    ${[['Exam Name',name],['Department',dept],['Batch',batch],['Students',students],['Date',date],['Duration',dur+' min'],['Status',status]].map(([k,v])=>`<tr style="border-bottom:1px solid var(--border)"><td style="padding:7px 0;font-weight:600;color:var(--text2);width:120px">${k}</td><td style="padding:7px 0;color:var(--text)">${v}</td></tr>`).join('')}
+  </table>`;
+  openM('m-view-exam');
+}
+function editExam(name){toast('Opening editor for "'+name+'"','info')}
+function startExam(name){if(confirm('Start "'+name+'" now? This will allow students to begin.')){toast('"'+name+'" started!','success')}}
+function endExam(name){if(confirm('End "'+name+'"? All active sessions will be terminated.')){toast('"'+name+'" ended.','danger')}}
+function deleteExamCard(btn,name){if(confirm('Delete "'+name+'"? This cannot be undone.')){btn.closest('.exam-card').remove();toast('"'+name+'" deleted','danger')}}
+function submitExam(e){
+  e.preventDefault();
+  const name=e.target.querySelector('input[type=text]').value;
+  toast('Exam "'+name+'" created!','success');
+  closeM('m-new-exam');e.target.reset();
+}
+
+/* ── STUDENTS ── */
+function filterStudents(){
+  const d=document.getElementById('sf-dept').value;
+  const b=document.getElementById('sf-batch').value;
+  const a=document.getElementById('sf-acc').value;
+  let n=0;
+  document.querySelectorAll('#stb tr').forEach(r=>{
+    const ok=(!d||r.dataset.dept===d)&&(!b||r.dataset.batch===b)&&(!a||r.dataset.access===a);
+    r.style.display=ok?'':'none';if(ok)n++;
+  });
+  document.getElementById('stu-cnt').textContent=n+' exam'+(n!==1?'s':'');
+  document.getElementById('stu-foot').textContent=n+' exams shown';
+}
+function resetStuFilters(){['sf-dept','sf-batch','sf-acc'].forEach(i=>document.getElementById(i).value='');filterStudents();toast('Filters cleared','info')}
+function togAcc(el){
+  el.classList.toggle('off');
+  const lbl=el.nextElementSibling;
+  const row=el.closest('tr');
+  const on=!el.classList.contains('off');
+  if(lbl)lbl.textContent=on?'Enabled':'Restricted';
+  if(row)row.dataset.access=on?'Enabled':'Restricted';
+  toast(on?'Access enabled':'Access restricted',on?'success':'info');
+}
+function admitRow(btn){
+  const name=btn.closest('tr').cells[1].textContent;
+  const t=btn.closest('tr').querySelector('.toggle');
+  if(t){t.classList.remove('off');t.nextElementSibling.textContent='Enabled';btn.closest('tr').dataset.access='Enabled';}
+  toast('"'+name+'" admitted','success');
+}
+function restrictRow(btn){
+  const name=btn.closest('tr').cells[1].textContent;
+  const t=btn.closest('tr').querySelector('.toggle');
+  if(t){t.classList.add('off');t.nextElementSibling.textContent='Restricted';btn.closest('tr').dataset.access='Restricted';}
+  toast('"'+name+'" restricted','danger');
+}
+function viewStuDetail(name,count){toast('Viewing '+count+' students for: '+name,'info')}
+function submitStudent(e){
+  e.preventDefault();
+  toast('Student added successfully!','success');
+  closeM('m-add-student');e.target.reset();
+}
+function exportStudentsCSV(){
+  const rows=[['Exam Name','Students','Batch','Date','Department','Access']];
+  document.querySelectorAll('#stb tr').forEach(r=>{
+    if(r.style.display==='none')return;
+    const cells=r.querySelectorAll('td');
+    if(cells.length<7)return;
+    rows.push([cells[1].textContent.trim(),cells[2].textContent.trim(),cells[3].textContent.trim(),cells[4].textContent.trim(),cells[5].textContent.trim(),cells[6].textContent.trim()]);
+  });
+  csvDownload(rows,'students.csv');
+}
+
+/* ── SELECT ALL ── */
+function selAll(masterId,childClass,cb){
+  const m=document.getElementById(masterId);
+  document.querySelectorAll(childClass).forEach(c=>c.checked=m.checked);
+  if(cb)cb();
+}
+
+/* ── RESULTS ── */
+function filterResults(v){
+  const lv=v.toLowerCase();
+  document.querySelectorAll('#rtb tr').forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(lv)?'':'none'});
+}
+function viewResultDetail(name,stu,avg,pass){
+  document.getElementById('vem-title').textContent='📊 Results: '+name;
+  document.getElementById('vem-body').innerHTML=`<table style="width:100%;border-collapse:collapse">
+    ${[['Exam',name],['Students',stu],['Average Score',avg+'%'],['Pass Rate',pass+'%'],['Status','Published']].map(([k,v])=>`<tr style="border-bottom:1px solid var(--border)"><td style="padding:7px 0;font-weight:600;color:var(--text2);width:130px">${k}</td><td style="padding:7px 0;color:var(--text)">${v}</td></tr>`).join('')}
+  </table>`;
+  openM('m-view-exam');
+}
+function publishOne(btn,name){
+  if(!confirm('Publish results for "'+name+'"?'))return;
+  const row=btn.closest('tr');
+  row.cells[4].innerHTML='<span class="pill pa">✓ Published</span>';
+  row.cells[5].innerHTML='<button class="btn btn-o btn-sm" onclick="toast(\'Viewing results\',\'info\')">View</button>';
+  const pc=document.getElementById('pending-cnt');
+  if(pc){let n=parseInt(pc.textContent)-1;pc.textContent=n<0?0:n;}
+  toast('"'+name+'" results published!','success');
+}
+function publishAll(){
+  if(!confirm('Publish ALL pending results?'))return;
+  document.querySelectorAll('#rtb .ps').forEach(p=>{
+    p.className='pill pa';p.textContent='✓ Published';
+    const row=p.closest('tr');
+    if(row)row.cells[5].innerHTML='<button class="btn btn-o btn-sm" onclick="toast(\'Viewing results\',\'info\')">View</button>';
+  });
+  const pc=document.getElementById('pending-cnt');if(pc)pc.textContent='0';
+  toast('All results published!','success');
+}
+function exportResultsCSV(){
+  const rows=[['Exam','Students','Avg Score','Pass %','Status']];
+  document.querySelectorAll('#rtb tr').forEach(r=>{
+    const c=r.querySelectorAll('td');if(c.length<5)return;
+    rows.push([c[0].textContent,c[1].textContent,c[2].textContent,c[3].textContent,c[4].textContent.trim()]);
+  });
+  csvDownload(rows,'results.csv');
+}
+
+/* ── QUESTION BANK ── */
+let qbFiles=[];
+function qbUpload(inp){
+  const f=inp.files[0];if(!f)return;
+  qbFiles.push(f);renderQBFiles();inp.value='';
+  toast('"'+f.name+'" uploaded!','success');
+}
+function renderQBFiles(){
+  const tb=document.getElementById('qb-frows');
+  const tbl=document.getElementById('qb-ftbl');
+  const emp=document.getElementById('qb-empty');
+  document.getElementById('qb-cnt').textContent=qbFiles.length+' File'+(qbFiles.length!==1?'s':'');
+  if(!qbFiles.length){tbl.style.display='none';emp.style.display='block';return;}
+  tbl.style.display='';emp.style.display='none';
+  tb.innerHTML=qbFiles.map((f,i)=>`<tr style="border-bottom:1px solid var(--border)">
+    <td style="padding:8px 11px;font-size:12.5px">${i+1}</td>
+    <td style="padding:8px 11px;font-size:12.5px">📄 ${f.name}</td>
+    <td style="padding:8px 11px"><span style="color:var(--purple);font-weight:600;font-size:11.5px">Physics</span></td>
+    <td style="padding:8px 11px;color:var(--primary);font-size:11.5px">QS-Physics-2026</td>
+    <td style="padding:8px 11px;font-size:11.5px;color:var(--text3)">${f.size>1024?(f.size/1024).toFixed(1)+'KB':f.size+'B'}</td>
+    <td style="padding:8px 11px;font-size:11px;color:var(--text3)">${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</td>
+    <td style="padding:8px 11px;display:flex;gap:5px"><button class="btn btn-p btn-xs" onclick="toast('Assigned to exam!','success')">Assign</button><button class="btn btn-d btn-xs" onclick="delQBFile(${i})">Del</button></td>
+  </tr>`).join('');
+}
+function delQBFile(i){const n=qbFiles[i].name;qbFiles.splice(i,1);renderQBFiles();toast('"'+n+'" deleted','danger')}
+function filterQB(v){const lv=v.toLowerCase();document.querySelectorAll('#qb-tb tr').forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(lv)?'':'none'})}
+function filterQBSubj(v){document.querySelectorAll('#qb-tb tr').forEach(r=>{r.style.display=(!v||r.cells[6]?.textContent.toLowerCase().includes(v.toLowerCase().replace('mathematics','math')))?'':'none'})}
+function filterQBDiff(v){document.querySelectorAll('#qb-tb tr').forEach(r=>{r.style.display=(!v||r.cells[4]?.textContent.trim()===v)?'':'none'})}
+function resetQBF(){document.getElementById('qbs').value='';document.getElementById('qbd').value='';document.querySelectorAll('#qb-tb tr').forEach(r=>r.style.display='');toast('Filters reset','info')}
+function updateQBSel(){
+  const n=document.querySelectorAll('.qc:checked').length;
+  document.getElementById('qb-selcnt').textContent=n+' selected';
+  document.getElementById('qb-bulk').classList.toggle('show',n>0);
+}
+function clearQBSel(){document.querySelectorAll('.qc').forEach(c=>c.checked=false);document.getElementById('qa').checked=false;updateQBSel()}
+function bulkAssign(){
+  const n=document.querySelectorAll('.qc:checked').length;
+  if(!n){toast('Select at least one question','danger');return;}
+  toast(n+' questions assigned to exam!','success');clearQBSel();
+}
+function bulkDel(){
+  const checked=document.querySelectorAll('.qc:checked');
+  if(!checked.length){toast('Select at least one question','danger');return;}
+  if(confirm('Delete '+checked.length+' selected question(s)?')){
+    checked.forEach(c=>c.closest('tr').remove());clearQBSel();
+    toast(checked.length+' questions deleted','danger');
+  }
+}
+function editQ(name){toast('Editing: "'+name+'"','info')}
+function delQ(btn,name){if(confirm('Delete "'+name+'"?')){btn.closest('tr').remove();toast('"'+name+'" deleted','danger')}}
+function assignSet(e){
+  e.preventDefault();
+  const set=e.target.querySelectorAll('select')[0].value;
+  const exam=e.target.querySelectorAll('select')[1].value;
+  toast('"'+set+'" assigned to "'+exam+'"!','success');e.target.reset();
+}
+
+/* ── USER ACCESS ── */
+function filterCreds(v){
+  const lv=v.toLowerCase();
+  document.querySelectorAll('#ctb tr').forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(lv)?'':'none'});
+}
+function editCred(name,uid){
+  document.getElementById('ec-title').textContent='✏️ Edit: '+name;
+  document.getElementById('ec-name').value=name;
+  document.getElementById('ec-uid').value=uid;
+  openM('m-edit-cred');
+}
+function saveCredEdit(e){
+  e.preventDefault();
+  const name=document.getElementById('ec-name').value;
+  toast(name+' updated successfully!','success');closeM('m-edit-cred');
+}
+function disableUser(btn,name){
+  if(!confirm('Disable access for '+name+'?'))return;
+  const row=btn.closest('tr');
+  row.querySelector('.pill').className='pill pdi';row.querySelector('.pill').textContent='● Disabled';
+  btn.outerHTML=`<button class="btn btn-s btn-xs" onclick="enableUser(this,'${name}')">Enable</button>`;
+  toast(name+' disabled','danger');
+}
+function enableUser(btn,name){
+  const row=btn.closest('tr');
+  row.querySelector('.pill').className='pill pa';row.querySelector('.pill').textContent='● Active';
+  btn.outerHTML=`<button class="btn btn-d btn-xs" onclick="disableUser(this,'${name}')">Disable</button>`;
+  toast(name+' enabled','success');
+}
+function exportCredsCSV(){
+  const rows=[['Name','User ID','Last Login','Access']];
+  document.querySelectorAll('#ctb tr').forEach(r=>{
+    const c=r.querySelectorAll('td');if(c.length<5)return;
+    rows.push([c[0].textContent,c[1].textContent,c[3].textContent,c[4].textContent.trim()]);
+  });
+  csvDownload(rows,'credentials.csv');
+}
+function resetAllPw(){
+  if(confirm('Reset ALL student passwords? New passwords will be emailed.')){
+    toast('All passwords reset & emailed!','success');
+  }
+}
+function addInvig(e){
+  e.preventDefault();
+  const name=e.target.querySelector('input[type=text]').value;
+  toast('Invigilator "'+name+'" added!','success');e.target.reset();
+}
+function resetPw(e){
+  e.preventDefault();
+  const pw=document.getElementById('rpw').value;
+  const pw2=document.getElementById('rpw2').value;
+  if(pw!==pw2){toast('Passwords do not match!','danger');return;}
+  const sid=document.getElementById('rsid').value;
+  toast('Password reset for '+sid,'success');e.target.reset();
+}
+
+/* ── SETTINGS ── */
+function saveSettings(){toast('Settings saved!','success')}
+
+/* ── LIVE COUNTER PULSE ── */
+setInterval(()=>{
+  ['lo','ls','slc'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){const n=parseInt(el.textContent);el.textContent=Math.max(180,Math.min(280,n+(Math.random()>.5?1:-1)));}
+  });
+},6000);
+</script>
+</body>
+</html>
