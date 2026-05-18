@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rate This Test | SEB Exam Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="page-bg">
+
+  <!-- Portal Header -->
+  <header class="portal-header">
+    <div class="header-inner">
+      <div class="brand">
+        <img src="logo.png" alt="SSC Logo" class="brand-logo">
+        <div class="brand-text">
+          <h1>Staff Selection Commission (Government of India)</h1>
+          <p>Post-Exam Feedback</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page -->
+  <div class="page-wrapper" style="align-items:flex-start;padding-top:32px;">
+    <div class="card-glass animate-in" style="width:100%;max-width:660px;">
+
+      <!-- Rating Form -->
+      <div id="ratingForm">
+
+        <div class="p-4 border-bottom" style="border-color:var(--gray-100)!important;">
+          <h2 class="section-heading">⭐ Rate This Test</h2>
+          <p class="section-sub">Your feedback helps us improve our examination platform</p>
+        </div>
+
+        <div class="p-4">
+
+          <!-- Main Stars -->
+          <div class="text-center mb-4 p-4" style="background:var(--gray-50);border-radius:var(--radius-md);">
+            <p style="font-size:0.8rem;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;">Overall Rating</p>
+            <div class="star-group" id="mainStars">
+              <input type="radio" id="s5" name="mainRating" value="5"><label for="s5" title="Excellent">★</label>
+              <input type="radio" id="s4" name="mainRating" value="4"><label for="s4" title="Very Good">★</label>
+              <input type="radio" id="s3" name="mainRating" value="3"><label for="s3" title="Good">★</label>
+              <input type="radio" id="s2" name="mainRating" value="2"><label for="s2" title="Fair">★</label>
+              <input type="radio" id="s1" name="mainRating" value="1"><label for="s1" title="Poor">★</label>
+            </div>
+          </div>
+
+          <!-- Detailed Ratings -->
+          <div style="background:var(--gray-50);border-radius:var(--radius-md);padding:18px;margin-bottom:20px;">
+            <p style="font-size:0.8rem;font-weight:700;color:var(--navy-700);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px;">📊 Detailed Ratings</p>
+
+            <div class="rating-question-row">
+              <span class="rating-q-label">🎯 Question Difficulty</span>
+              <div class="star-group-sm">
+                <input type="radio" id="d5" name="difficulty" value="5"><label for="d5">★</label>
+                <input type="radio" id="d4" name="difficulty" value="4"><label for="d4">★</label>
+                <input type="radio" id="d3" name="difficulty" value="3"><label for="d3">★</label>
+                <input type="radio" id="d2" name="difficulty" value="2"><label for="d2">★</label>
+                <input type="radio" id="d1" name="difficulty" value="1"><label for="d1">★</label>
+              </div>
+            </div>
+            <div class="rating-question-row">
+              <span class="rating-q-label">⏱️ Time Allotment</span>
+              <div class="star-group-sm">
+                <input type="radio" id="t5" name="timing" value="5"><label for="t5">★</label>
+                <input type="radio" id="t4" name="timing" value="4"><label for="t4">★</label>
+                <input type="radio" id="t3" name="timing" value="3"><label for="t3">★</label>
+                <input type="radio" id="t2" name="timing" value="2"><label for="t2">★</label>
+                <input type="radio" id="t1" name="timing" value="1"><label for="t1">★</label>
+              </div>
+            </div>
+            <div class="rating-question-row">
+              <span class="rating-q-label">📝 Question Quality</span>
+              <div class="star-group-sm">
+                <input type="radio" id="q5" name="quality" value="5"><label for="q5">★</label>
+                <input type="radio" id="q4" name="quality" value="4"><label for="q4">★</label>
+                <input type="radio" id="q3" name="quality" value="3"><label for="q3">★</label>
+                <input type="radio" id="q2" name="quality" value="2"><label for="q2">★</label>
+                <input type="radio" id="q1" name="quality" value="1"><label for="q1">★</label>
+              </div>
+            </div>
+            <div class="rating-question-row" style="margin-bottom:0;">
+              <span class="rating-q-label">🌟 Overall Experience</span>
+              <div class="star-group-sm">
+                <input type="radio" id="o5" name="overall" value="5"><label for="o5">★</label>
+                <input type="radio" id="o4" name="overall" value="4"><label for="o4">★</label>
+                <input type="radio" id="o3" name="overall" value="3"><label for="o3">★</label>
+                <input type="radio" id="o2" name="overall" value="2"><label for="o2">★</label>
+                <input type="radio" id="o1" name="overall" value="1"><label for="o1">★</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feedback Text -->
+          <div class="mb-4">
+            <label style="display:block;font-size:0.8rem;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">✍️ Write Your Feedback</label>
+            <textarea class="feedback-area" id="feedbackText" placeholder="Tell us what you liked or what we can improve…"></textarea>
+          </div>
+
+          <!-- Submit -->
+          <button class="btn-primary-portal" id="submitRatingBtn" onclick="submitRating()">
+            <i class="fas fa-paper-plane me-2"></i> Submit Feedback
+          </button>
+
+        </div>
+      </div><!-- /ratingForm -->
+
+      <!-- Thank You -->
+      <div id="thankYouBlock" style="display:none;">
+        <div class="thank-you-block">
+          <span class="ty-icon">🎉</span>
+          <h2 class="section-heading mb-2">Thank You!</h2>
+          <p class="section-sub mb-0">Your feedback has been submitted successfully.</p>
+          <p class="section-sub">We appreciate your time and input!</p>
+          <span class="ty-stars" id="tyStars">★★★★★</span>
+          <button class="btn-primary-portal mt-2" onclick="alert('Thank you for completing the exam!')" style="max-width:240px;margin:0 auto;">
+            <i class="fas fa-check-circle me-2"></i> Complete
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="rating.js"></script>
+</body>
+</html>
