@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEB ExamPortal — Admin Login</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --primary:#1a56db;
+  --primary-light:#ebf0fd;
+  --primary-dark:#1341b0;
+  --bg:#f0f4fa;
+  --white:#ffffff;
+  --surface:#f8faff;
+  --border:#d1ddf5;
+  --border2:#b0c3ee;
+  --text:#111827;
+  --text2:#4b5563;
+  --text3:#9ca3af;
+  --green:#059669;
+  --green-bg:#ecfdf5;
+  --red:#dc2626;
+  --red-bg:#fef2f2;
+  --amber:#d97706;
+  --amber-bg:#fffbeb;
+  --shadow:0 1px 3px rgba(26,86,219,0.08),0 4px 16px rgba(26,86,219,0.06);
+  --shadow-lg:0 8px 32px rgba(26,86,219,0.14);
+  --r:12px;--r-sm:8px;--r-xs:6px;
+}
+
+/* ── BASE ── */
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  padding:24px 16px;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:
+    radial-gradient(circle at 20% 20%,rgba(26,86,219,0.06) 0%,transparent 50%),
+    radial-gradient(circle at 80% 80%,rgba(16,185,129,0.05) 0%,transparent 50%);
+  z-index:0;pointer-events:none;
+}
+
+/* ── TOP BAR ── */
+.top-bar{position:fixed;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#1a56db,#3b82f6,#06b6d4);z-index:100}
+
+/* ── WRAPPER ── */
+.login-wrap{
+  position:relative;z-index:10;
+  width:100%;max-width:440px;
+  animation:slideUp .4s ease;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── LOGO ── */
+.logo-area{text-align:center;margin-bottom:20px}
+.logo-icon{width:56px;height:56px;border-radius:16px;background:var(--primary);display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;box-shadow:0 4px 20px rgba(26,86,219,0.35)}
+.logo-icon svg{width:26px;height:26px;stroke:#fff;fill:none;stroke-width:2.2}
+.logo-name{font-size:22px;font-weight:700;color:var(--text);letter-spacing:-.5px}
+.logo-name span{color:var(--primary)}
+.logo-tagline{font-size:12px;color:var(--text3);margin-top:3px}
+.admin-badge{display:inline-flex;align-items:center;gap:6px;background:var(--primary-light);border:1px solid rgba(26,86,219,0.2);border-radius:20px;padding:4px 14px;font-size:11px;font-weight:600;color:var(--primary);margin-top:8px}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.4s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── CARD ── */
+.login-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:28px;box-shadow:var(--shadow-lg)}
+
+/* ── SECTION LABEL ── */
+.section-label{font-size:10.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+
+/* ── ROLE CARD ── */
+.role-card{background:var(--surface);border:2px solid var(--primary);border-radius:var(--r-sm);padding:12px;text-align:center;position:relative;background:var(--primary-light);margin-bottom:18px}
+.role-card::after{content:'✓';position:absolute;top:7px;right:10px;font-size:11px;color:var(--primary);font-weight:700}
+.role-emoji{font-size:20px;margin-bottom:3px}
+.role-name{font-size:13px;font-weight:700;color:var(--text)}
+.role-desc{font-size:10px;color:var(--text3);margin-top:2px}
+
+/* ── FORM ── */
+.form-group{margin-bottom:14px}
+.form-label{display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:5px}
+.input-wrap{position:relative}
+.form-input{
+  width:100%;background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--r-sm);padding:11px 44px 11px 14px;font-size:14px;
+  color:var(--text);outline:none;transition:border .18s,box-shadow .18s;
+  font-family:'DM Sans',sans-serif;
+}
+.form-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,86,219,0.12);background:#fff}
+.form-input::placeholder{color:var(--text3)}
+.input-icon{position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none}
+.input-icon svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.eye-btn{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text3);padding:2px;transition:color .15s}
+.eye-btn:hover{color:var(--text2)}
+.eye-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* ── REMEMBER ROW ── */
+.flex-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:10px;flex-wrap:wrap}
+.remember-label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2);cursor:pointer;font-weight:500}
+.remember-label input[type=checkbox]{width:15px;height:15px;accent-color:var(--primary);cursor:pointer;flex-shrink:0}
+.forgot-btn{background:none;border:none;font-size:13px;font-weight:600;color:var(--primary);cursor:pointer;font-family:inherit;white-space:nowrap}
+.forgot-btn:hover{text-decoration:underline}
+
+/* ── LOGIN BUTTON ── */
+.btn-login{
+  width:100%;padding:13px;border-radius:var(--r-sm);
+  background:var(--primary);color:#fff;font-size:15px;font-weight:700;
+  border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  gap:8px;transition:all .18s;font-family:'DM Sans',sans-serif;
+}
+.btn-login:hover{background:var(--primary-dark);box-shadow:0 6px 20px rgba(26,86,219,0.35);transform:translateY(-1px)}
+.btn-login:active{transform:translateY(0)}
+.btn-login:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-login svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.5}
+.spinner{width:18px;height:18px;border:2.5px solid rgba(255,255,255,0.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── SIGN UP LINK (inside card, right below login button) ── */
+.signup-row{
+  text-align:center;
+  margin-top:14px;
+  font-size:13px;
+  color:var(--text3);
+}
+.signup-row a{
+  color:var(--primary);
+  font-weight:600;
+  text-decoration:none;
+  cursor:pointer;
+}
+.signup-row a:hover{text-decoration:underline}
+
+/* ── ALERTS ── */
+.alert{border-radius:var(--r-sm);padding:11px 14px;margin-bottom:14px;font-size:13px;font-weight:500;display:none;align-items:center;gap:9px;line-height:1.4}
+.alert.show{display:flex}
+.alert svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
+.alert-err{background:var(--red-bg);border:1.5px solid rgba(220,38,38,0.25);color:var(--red)}
+.alert-ok{background:var(--green-bg);border:1.5px solid rgba(5,150,105,0.25);color:var(--green)}
+
+/* ── ATTEMPTS ── */
+.attempts-box{background:var(--amber-bg);border:1.5px solid rgba(217,119,6,0.3);border-radius:var(--r-sm);padding:9px 13px;font-size:12.5px;color:var(--amber);font-weight:600;text-align:center;margin-bottom:14px;display:none}
+.attempts-box.show{display:block}
+
+/* ── LOCK SCREEN ── */
+.locked-screen{display:none;text-align:center;padding:12px 0}
+.lock-emoji{font-size:44px;margin-bottom:10px}
+.lock-title{font-size:15px;font-weight:700;color:var(--red);margin-bottom:5px}
+.lock-sub{font-size:13px;color:var(--text2);margin-bottom:14px}
+.countdown{font-size:34px;font-weight:700;color:var(--red);font-family:'DM Mono',monospace;margin:6px 0 14px}
+
+/* ── DIVIDER ── */
+.divider{display:flex;align-items:center;gap:10px;margin:18px 0 12px;color:var(--text3);font-size:11px;font-weight:500}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── SECURITY ROW ── */
+.security-row{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+.sec-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3);font-weight:500}
+.sec-item svg{width:13px;height:13px;stroke:var(--green);fill:none;stroke-width:2.5}
+
+/* ── OTP ── */
+.otp-wrap{display:none}
+.otp-header{text-align:center;margin-bottom:18px}
+.otp-emoji{font-size:34px;margin-bottom:8px}
+.otp-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:3px}
+.otp-sub{font-size:13px;color:var(--text2);line-height:1.5}
+.otp-demo{display:inline-flex;align-items:center;gap:6px;background:var(--primary-light);border:1px solid rgba(26,86,219,0.2);border-radius:var(--r-xs);padding:5px 12px;font-size:12px;color:var(--primary);font-weight:600;margin-top:8px}
+.otp-inputs{display:flex;gap:8px;justify-content:center;margin:14px 0}
+.otp-input{width:46px;height:52px;text-align:center;background:var(--surface);border:2px solid var(--border);border-radius:var(--r-sm);font-size:22px;font-weight:700;color:var(--text);outline:none;font-family:'DM Mono',monospace;transition:border .18s}
+.otp-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,86,219,0.12);background:#fff}
+.otp-timer{text-align:center;font-size:12.5px;color:var(--text3);margin-top:5px}
+.otp-timer strong{font-family:'DM Mono',monospace;color:var(--amber)}
+.otp-links{text-align:center;font-size:13px;color:var(--text3);margin-top:8px}
+.otp-links span{color:var(--primary);cursor:pointer;font-weight:600}
+.otp-links span:hover{text-decoration:underline}
+
+/* ── LOADING OVERLAY ── */
+.load-overlay{position:fixed;inset:0;background:rgba(240,244,250,0.96);z-index:999;display:none;flex-direction:column;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.load-overlay.show{display:flex}
+.load-icon{width:56px;height:56px;border-radius:16px;background:var(--primary);display:flex;align-items:center;justify-content:center;margin-bottom:18px;box-shadow:0 4px 20px rgba(26,86,219,0.3)}
+.load-icon svg{width:26px;height:26px;stroke:#fff;fill:none;stroke-width:2.2}
+.load-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px}
+.load-sub{font-size:13px;color:var(--text2);margin-bottom:20px}
+.load-track{width:200px;height:4px;background:var(--border);border-radius:4px;overflow:hidden}
+.load-fill{height:100%;background:linear-gradient(90deg,var(--primary),#06b6d4);border-radius:4px;width:0%;transition:width .3s ease}
+
+/* ── FOOTER ── */
+.login-footer{text-align:center;margin-top:16px;font-size:11.5px;color:var(--text3);line-height:1.8}
+.login-footer strong{color:var(--text2)}
+
+/* ── FORGOT MODAL ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:500;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-bg.show{display:flex;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-box{background:#fff;border:1.5px solid var(--border);border-radius:var(--r);padding:26px;width:100%;max-width:380px;box-shadow:var(--shadow-lg)}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:4px;color:var(--text)}
+.modal-sub{font-size:13px;color:var(--text2);margin-bottom:16px}
+.modal-actions{display:flex;gap:10px;margin-top:14px}
+.btn-cancel{flex:1;padding:10px;border-radius:var(--r-sm);border:1.5px solid var(--border);background:#fff;color:var(--text2);font-size:13.5px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.btn-cancel:hover{border-color:var(--border2);color:var(--text)}
+.btn-send{flex:1;padding:10px;border-radius:var(--r-sm);border:none;background:var(--primary);color:#fff;font-size:13.5px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.btn-send:hover{background:var(--primary-dark)}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:520px){
+  body{padding:16px 12px}
+  .logo-area{margin-bottom:14px}
+  .logo-icon{width:50px;height:50px}
+  .logo-name{font-size:20px}
+  .login-card{padding:22px 18px}
+}
+@media(max-width:400px){
+  body{padding:12px 8px}
+  .login-card{padding:20px 14px}
+  .otp-inputs{gap:5px}
+  .otp-input{width:38px;height:46px;font-size:18px}
+  .security-row{gap:10px}
+  .flex-row{flex-direction:column;align-items:flex-start;gap:10px;margin-bottom:14px}
+  .btn-login{font-size:14px;padding:12px}
+}
+</style>
+</head>
+<body>
+<div class="top-bar"></div>
+
+<!-- Forgot Modal -->
+<div class="modal-bg" id="forgot-modal">
+  <div class="modal-box">
+    <div class="modal-title">Reset Admin Password</div>
+    <div class="modal-sub">Enter your registered email to receive a reset link</div>
+    <div class="form-group">
+      <label class="form-label">Admin Email</label>
+      <div class="input-wrap">
+        <input class="form-input" type="email" id="reset-email" placeholder="admin@sebportal.in" style="padding-right:14px">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="document.getElementById('forgot-modal').classList.remove('show')">Cancel</button>
+      <button class="btn-send" onclick="sendReset()">Send Reset Link</button>
+    </div>
+  </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="load-overlay" id="load-overlay">
+  <div class="load-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+  <div class="load-title">Signing you in…</div>
+  <div class="load-sub" id="load-sub">Verifying your credentials</div>
+  <div class="load-track"><div class="load-fill" id="load-fill"></div></div>
+</div>
+
+<div class="login-wrap">
+  <!-- Logo -->
+  <div class="logo-area">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    </div>
+    <div class="logo-name">SEB<span>Portal</span></div>
+    <div class="logo-tagline">Secure Exam Browser · Admin Console</div>
+    <div class="admin-badge"><span class="badge-dot"></span>Authorised Admin Access Only</div>
+  </div>
+
+  <!-- Card -->
+  <div class="login-card">
+
+    <!-- Alerts -->
+    <div class="alert alert-err" id="err-alert">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      <span id="err-msg">Invalid credentials. Please try again.</span>
+    </div>
+    <div class="alert alert-ok" id="ok-alert">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span id="ok-msg">Login successful!</span>
+    </div>
+    <div class="attempts-box" id="attempts-box"></div>
+
+    <!-- Lock Screen -->
+    <div class="locked-screen" id="locked-screen">
+      <div class="lock-emoji">🔒</div>
+      <div class="lock-title">Account Temporarily Locked</div>
+      <div class="lock-sub">Too many failed login attempts. Please wait:</div>
+      <div class="countdown" id="countdown">00:30</div>
+      <div class="lock-sub">Contact your system administrator if you need help.</div>
+    </div>
+
+    <!-- Login Form -->
+    <div id="login-form">
+      <div class="section-label">Login As</div>
+      <div class="role-card">
+        <div class="role-emoji">🛡️</div>
+        <div class="role-name">Super Admin</div>
+        <div class="role-desc">Full control</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">User ID / Email</label>
+        <div class="input-wrap">
+          <input class="form-input" type="text" id="uid" placeholder="admin@sebportal.in" autocomplete="username">
+          <span class="input-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="input-wrap">
+          <input class="form-input" type="password" id="pwd" placeholder="Enter your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+          <button class="eye-btn" id="eye-btn" onclick="toggleEye()" type="button">
+            <svg id="eye-icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex-row">
+        <label class="remember-label">
+          <input type="checkbox" id="remember" checked> Remember this device
+        </label>
+        <button class="forgot-btn" type="button" onclick="document.getElementById('forgot-modal').classList.add('show')">Forgot password?</button>
+      </div>
+
+      <button class="btn-login" id="login-btn" type="button" onclick="doLogin()">
+        <svg id="btn-icon" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        <span id="btn-txt">Sign In to Admin Panel</span>
+        <div class="spinner" id="spinner"></div>
+      </button>
+
+      <!-- Sign Up link — right below the button, inside the card -->
+      <div class="signup-row">
+        New admin? <a onclick="alert('Contact your system administrator to create an admin account.')">Request Access</a>
+      </div>
+    </div>
+
+    <!-- OTP Step -->
+    <div class="otp-wrap" id="otp-wrap">
+      <div class="otp-header">
+        <div class="otp-emoji">📲</div>
+        <div class="otp-title">Two-Factor Verification</div>
+        <div class="otp-sub">Enter the 6-digit OTP sent to your registered email &amp; phone</div>
+        <div class="otp-demo">Demo OTP: 4 8 2 7 1 6</div>
+      </div>
+      <div class="otp-inputs">
+        <input class="otp-input" maxlength="1" inputmode="numeric" id="o0" oninput="onOtp(this,0)">
+        <input class="otp-input" maxlength="1" inputmode="numeric" id="o1" oninput="onOtp(this,1)">
+        <input class="otp-input" maxlength="1" inputmode="numeric" id="o2" oninput="onOtp(this,2)">
+        <input class="otp-input" maxlength="1" inputmode="numeric" id="o3" oninput="onOtp(this,3)">
+        <input class="otp-input" maxlength="1" inputmode="numeric" id="o4" oninput="onOtp(this,4)">
+        <input class="otp-input" maxlength="1" inputmode="numeric" id="o5" oninput="onOtp(this,5)">
+      </div>
+      <button class="btn-login" type="button" onclick="verifyOTP()" style="margin-bottom:12px">
+        <svg viewBox="0 0 24 24" style="width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>Verify &amp; Sign In</span>
+      </button>
+      <div class="otp-timer">OTP expires in <strong id="otp-time">04:59</strong></div>
+      <div class="otp-links" style="margin-top:10px">
+        <span onclick="resendOTP()">Resend OTP</span> &nbsp;·&nbsp;
+        <span onclick="backToLogin()">← Back to Login</span>
+      </div>
+    </div>
+
+    <div class="divider">Secured Connection</div>
+    <div class="security-row">
+      <div class="sec-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>SSL Encrypted</div>
+      <div class="sec-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>2FA Protected</div>
+      <div class="sec-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Session Logged</div>
+    </div>
+  </div>
+
+  <div class="login-footer">
+    <strong>SEB ExamPortal v2.0</strong> · Unauthorised access is strictly prohibited<br>
+    All login attempts are monitored and recorded
+  </div>
+</div>
+
+<script>
+const ADMINS = {
+  'admin@sebportal.in': { pass: 'Admin@123', role: 'admin', name: 'Super Admin' }
+};
+const DEMO_OTP = '482716';
+let attempts = 0, lockTmr = null, otpTmr = null, otpSecs = 299;
+
+function toggleEye() {
+  const p = document.getElementById('pwd');
+  p.type = p.type === 'password' ? 'text' : 'password';
+  document.getElementById('eye-icon').innerHTML = p.type === 'text'
+    ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
+    : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+}
+
+function showErr(m) {
+  document.getElementById('err-msg').textContent = m;
+  document.getElementById('err-alert').classList.add('show');
+  document.getElementById('ok-alert').classList.remove('show');
+}
+function showOK(m) {
+  document.getElementById('ok-msg').textContent = m;
+  document.getElementById('ok-alert').classList.add('show');
+  document.getElementById('err-alert').classList.remove('show');
+}
+function clearAlerts() {
+  document.getElementById('err-alert').classList.remove('show');
+  document.getElementById('ok-alert').classList.remove('show');
+}
+
+function setLoading(on) {
+  document.getElementById('login-btn').disabled = on;
+  document.getElementById('btn-txt').textContent = on ? 'Verifying…' : 'Sign In to Admin Panel';
+  document.getElementById('btn-icon').style.display = on ? 'none' : '';
+  document.getElementById('spinner').style.display = on ? 'block' : 'none';
+}
+
+function lockAccount() {
+  document.getElementById('login-form').style.display = 'none';
+  document.getElementById('locked-screen').style.display = 'block';
+  clearAlerts();
+  let s = 30;
+  tick();
+  function tick() {
+    document.getElementById('countdown').textContent = '00:' + String(s).padStart(2, '0');
+    if (s <= 0) {
+      attempts = 0;
+      document.getElementById('locked-screen').style.display = 'none';
+      document.getElementById('login-form').style.display = 'block';
+      document.getElementById('attempts-box').classList.remove('show');
+      return;
+    }
+    s--;
+    lockTmr = setTimeout(tick, 1000);
+  }
+}
+
+function doLogin() {
+  clearAlerts();
+  const uid = document.getElementById('uid').value.trim();
+  const pwd = document.getElementById('pwd').value;
+  if (!uid) { showErr('Please enter your User ID.'); return; }
+  if (!pwd) { showErr('Please enter your password.'); return; }
+  setLoading(true);
+  setTimeout(() => {
+    setLoading(false);
+    const u = ADMINS[uid];
+    if (!u || u.pass !== pwd) {
+      attempts++;
+      const left = 3 - attempts;
+      if (attempts >= 3) { lockAccount(); return; }
+      showErr('Incorrect User ID or password.');
+      const ab = document.getElementById('attempts-box');
+      ab.textContent = (left === 1 ? '⚠️ Last attempt! ' : '⚠️ ') + left + ' attempt' + (left > 1 ? 's' : '') + ' remaining before account lock.';
+      ab.classList.add('show');
+      document.getElementById('pwd').value = '';
+      return;
+    }
+    // Save pending session
+    localStorage.setItem('seb_pending', JSON.stringify({ uid, name: u.name, role: u.role }));
+    showOK('Credentials verified! Sending OTP…');
+    setTimeout(show2FA, 900);
+  }, 1300);
+}
+
+function show2FA() {
+  document.getElementById('login-form').style.display = 'none';
+  document.getElementById('otp-wrap').style.display = 'block';
+  clearAlerts();
+  startOTPTimer();
+  document.getElementById('o0').focus();
+}
+
+function backToLogin() {
+  document.getElementById('otp-wrap').style.display = 'none';
+  document.getElementById('login-form').style.display = 'block';
+  clearInterval(otpTmr);
+}
+
+function onOtp(inp, idx) {
+  inp.value = inp.value.replace(/\D/g, '');
+  if (inp.value && idx < 5) document.getElementById('o' + (idx + 1)).focus();
+  const full = [0,1,2,3,4,5].map(i => document.getElementById('o'+i).value).join('');
+  if (full.length === 6) setTimeout(verifyOTP, 200);
+}
+
+function verifyOTP() {
+  const otp = [0,1,2,3,4,5].map(i => document.getElementById('o'+i).value).join('');
+  if (otp.length < 6) { showErr('Please enter all 6 digits.'); return; }
+  if (otp !== DEMO_OTP) { showErr('Incorrect OTP. Please try again.'); return; }
+  clearInterval(otpTmr);
+  showLoader();
+}
+
+function resendOTP() {
+  [0,1,2,3,4,5].forEach(i => { document.getElementById('o'+i).value = ''; });
+  document.getElementById('o0').focus();
+  otpSecs = 299; clearInterval(otpTmr); startOTPTimer();
+  showOK('OTP resent successfully!'); setTimeout(clearAlerts, 2000);
+}
+
+function startOTPTimer() {
+  otpSecs = 299; updateOTPTime();
+  otpTmr = setInterval(() => {
+    otpSecs--;
+    if (otpSecs <= 0) { clearInterval(otpTmr); document.getElementById('otp-time').textContent = 'EXPIRED'; return; }
+    updateOTPTime();
+  }, 1000);
+}
+
+function updateOTPTime() {
+  const m = Math.floor(otpSecs / 60), s = otpSecs % 60;
+  document.getElementById('otp-time').textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+}
+
+function showLoader() {
+  const ov = document.getElementById('load-overlay');
+  const bar = document.getElementById('load-fill');
+  const sub = document.getElementById('load-sub');
+  ov.classList.add('show');
+  const steps = [
+    [10, 'Authenticating session…'],
+    [35, 'Verifying 2FA token…'],
+    [60, 'Loading dashboard…'],
+    [85, 'Establishing secure session…'],
+    [100, 'Launching admin panel…']
+  ];
+  let i = 0;
+  function step() {
+    if (i >= steps.length) {
+      // Save session to localStorage (works across pages in both file:// and Live Server)
+      const p = JSON.parse(localStorage.getItem('seb_pending') || '{}');
+      const sessionData = {
+        ...p,
+        loggedIn: true,
+        loginTime: new Date().toISOString(),
+        sessionId: 'SEB-' + Math.random().toString(36).substr(2, 9).toUpperCase()
+      };
+      localStorage.setItem('seb_admin_session', JSON.stringify(sessionData));
+      localStorage.removeItem('seb_pending');
+
+      // Save username if Remember Me is checked
+      if (document.getElementById('remember').checked) {
+        localStorage.setItem('seb_uid', document.getElementById('uid').value.trim());
+      } else {
+        localStorage.removeItem('seb_uid');
+      }
+
+      // Redirect to dashboard
+      setTimeout(() => {
+        window.location.replace('seb_admin_dashboard.html');
+      }, 400);
+      return;
+    }
+    bar.style.width = steps[i][0] + '%';
+    sub.textContent = steps[i][1];
+    i++;
+    setTimeout(step, 500);
+  }
+  step();
+}
+
+function sendReset() {
+  const e = document.getElementById('reset-email').value.trim();
+  if (!e) return;
+  document.getElementById('forgot-modal').classList.remove('show');
+  alert('✅ Password reset link sent to ' + e + '\n\nIn a live system, a real email would be sent.');
+}
+
+window.onload = function() {
+  // If already logged in → go straight to dashboard
+  try {
+    const sess = JSON.parse(localStorage.getItem('seb_admin_session') || 'null');
+    if (sess && sess.loggedIn) {
+      // Check session not older than 1 hour
+      const age = Date.now() - new Date(sess.loginTime).getTime();
+      if (age < 3600000) {
+        window.location.replace('seb_admin_dashboard.html');
+        return;
+      } else {
+        localStorage.removeItem('seb_admin_session');
+      }
+    }
+  } catch(e) {
+    localStorage.removeItem('seb_admin_session');
+  }
+
+  // Restore saved username
+  const saved = localStorage.getItem('seb_uid');
+  if (saved) {
+    document.getElementById('uid').value = saved;
+    document.getElementById('remember').checked = true;
+  }
+};
+
+document.getElementById('uid').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('pwd').focus();
+});
+</script>
+</body>
+</html>
