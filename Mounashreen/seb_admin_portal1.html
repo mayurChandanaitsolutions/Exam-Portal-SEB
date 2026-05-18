@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEB Exam Portal — Admin Console</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f0fb;
+  --s1:#ffffff;
+  --s2:#f7f4fe;
+  --s3:#ede8fb;
+  --s4:#e0d6f9;
+  --bd:rgba(139,92,246,0.13);
+  --bd2:rgba(139,92,246,0.28);
+  --bd3:rgba(139,92,246,0.45);
+  --pr:#7c3aed;
+  --pr2:#8b5cf6;
+  --pr3:#6d28d9;
+  --pr4:#4c1d95;
+  --wh:#1e1340;
+  --wh2:#3b2a6e;
+  --wh3:#5b4a8a;
+  --mu:#9585c0;
+  --gr:#059669;
+  --yw:#d97706;
+  --rd:#dc2626;
+  --sw:248px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--wh);min-height:100vh;display:flex;overflow-x:hidden;}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-thumb{background:rgba(139,92,246,0.35);border-radius:4px;}
+
+/* SIDEBAR */
+.sidebar{width:var(--sw);min-height:100vh;background:linear-gradient(180deg,#3b0764 0%,#4c1d95 35%,#5b21b6 70%,#6d28d9 100%);border-right:none;position:fixed;left:0;top:0;bottom:0;z-index:200;display:flex;flex-direction:column;overflow-y:auto;transition:transform .3s;box-shadow:4px 0 28px rgba(76,29,149,.25);}
+.logo-wrap{padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,.13);display:flex;align-items:center;gap:11px;background:rgba(0,0,0,.1);}
+.logo-icon{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:12px;color:#fff;flex-shrink:0;border:1px solid rgba(255,255,255,.32);}
+.logo-text{font-family:'Syne',sans-serif;font-weight:700;font-size:13.5px;color:#fff;line-height:1.2;}
+.logo-text small{display:block;font-size:10px;color:rgba(255,255,255,.55);font-weight:400;margin-top:1px;}
+.nav-sec{padding:12px 8px 2px;}
+.nav-lbl{font-size:9px;color:rgba(255,255,255,.4);letter-spacing:1.8px;text-transform:uppercase;padding:0 8px 7px;font-weight:600;}
+.nav-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:9px;cursor:pointer;font-size:12.5px;color:rgba(255,255,255,.68);transition:all .15s;margin-bottom:2px;border:1px solid transparent;position:relative;font-weight:500;}
+.nav-item:hover{background:rgba(255,255,255,.12);color:#fff;}
+.nav-item.on{background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.28);font-weight:600;}
+.nav-item.on::before{content:'';position:absolute;left:-8px;top:50%;transform:translateY(-50%);width:3px;height:18px;background:#fff;border-radius:0 2px 2px 0;}
+.nav-icon{font-size:14px;width:17px;text-align:center;flex-shrink:0;}
+.nbadge{margin-left:auto;background:#ef4444;color:#fff;font-size:9px;padding:1px 6px;border-radius:20px;font-weight:700;}
+.sb-foot{margin-top:auto;padding:12px;border-top:1px solid rgba(255,255,255,.13);}
+.admin-btn{display:flex;align-items:center;gap:9px;padding:9px 11px;background:rgba(255,255,255,.12);border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.2);transition:all .15s;}
+.admin-btn:hover{background:rgba(255,255,255,.18);}
+.av{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;color:#fff;flex-shrink:0;border:2px solid rgba(255,255,255,.4);}
+.av-name{font-size:12px;font-weight:600;color:#fff;}
+.av-role{font-size:10px;color:rgba(255,255,255,.62);}
+
+/* MAIN */
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{height:60px;background:#fff;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(109,40,217,.07);}
+.topbar-left .ptitle{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--wh);}
+.topbar-left .bcrumb{font-size:11px;color:var(--mu);margin-top:1px;}
+.topbar-left .bcrumb span{color:var(--pr);}
+.topbar-right{display:flex;align-items:center;gap:8px;}
+
+/* BUTTONS */
+.btn{padding:6px 14px;border-radius:8px;border:none;font-family:'Nunito',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:5px;}
+.btn-p{background:linear-gradient(135deg,#5b21b6,#7c3aed);color:#fff;box-shadow:0 2px 10px rgba(109,40,217,.3);}
+.btn-p:hover{box-shadow:0 4px 18px rgba(109,40,217,.45);transform:translateY(-1px);}
+.btn-g{background:#fff;color:var(--wh2);border:1px solid var(--bd);}
+.btn-g:hover{border-color:var(--bd2);color:var(--wh);background:#fff;}
+.btn-r{background:rgba(220,38,38,.08);color:#b91c1c;border:1px solid rgba(220,38,38,.18);}
+.btn-r:hover{background:rgba(220,38,38,.14);}
+.btn-gr{background:rgba(5,150,105,.08);color:#065f46;border:1px solid rgba(5,150,105,.18);}
+.btn-sm{padding:4px 10px;font-size:11px;}
+.nbell{width:34px;height:34px;border-radius:8px;background:#fff;border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;position:relative;}
+.nbell:hover{border-color:var(--bd2);background:#fff;}
+.ndot{position:absolute;top:6px;right:6px;width:6px;height:6px;border-radius:50%;background:#ef4444;border:2px solid #fff;}
+
+/* CONTENT */
+.content{padding:22px 24px;flex:1;}
+.page{display:none;animation:fu .3s ease;}
+.page.on{display:block;}
+@keyframes fu{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* GRID */
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.g3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:16px;margin-bottom:16px;}
+.g3c{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px;}
+
+/* STAT CARD */
+.scard{background:#fff;border:1px solid var(--bd);border-radius:13px;padding:18px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s,box-shadow .2s;box-shadow:0 1px 6px rgba(109,40,217,.06);}
+.scard:hover{transform:translateY(-2px);border-color:var(--bd2);box-shadow:0 6px 20px rgba(109,40,217,.12);}
+.scard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:13px 13px 0 0;}
+.scard.cp::before{background:linear-gradient(90deg,#5b21b6,#8b5cf6);}
+.scard.cg::before{background:linear-gradient(90deg,#065f46,#10b981);}
+.scard.cy::before{background:linear-gradient(90deg,#92400e,#f59e0b);}
+.scard.cr::before{background:linear-gradient(90deg,#991b1b,#ef4444);}
+.sg-glow{position:absolute;top:-15px;right:-15px;width:70px;height:70px;border-radius:50%;filter:blur(28px);opacity:.08;}
+.scard.cp .sg-glow{background:#7c3aed;}
+.scard.cg .sg-glow{background:#059669;}
+.scard.cy .sg-glow{background:#d97706;}
+.scard.cr .sg-glow{background:#dc2626;}
+.si{font-size:18px;margin-bottom:9px;}
+.sv{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--wh);}
+.sl{font-size:11px;color:var(--mu);margin-top:2px;}
+.sd{font-size:11px;margin-top:6px;}
+.cup{color:#059669;} .cdn{color:#dc2626;} .cnu{color:var(--mu);}
+
+/* PANEL */
+.panel{background:#fff;border:1px solid var(--bd);border-radius:13px;overflow:hidden;margin-bottom:0;box-shadow:0 1px 6px rgba(109,40,217,.06);}
+.ph{padding:13px 16px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;background:#fff;}
+.ph-t{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--wh);display:flex;align-items:center;gap:6px;}
+.pb{padding:16px;}
+.lbtn{font-size:11.5px;color:var(--pr);background:none;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:600;}
+.lbtn:hover{color:var(--pr);}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{text-align:left;padding:8px 12px;font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--bd);font-weight:700;background:#fff;}
+.tbl td{padding:10px 12px;font-size:12px;border-bottom:1px solid rgba(139,92,246,.06);color:var(--wh2);}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tbody tr:hover{background:rgba(139,92,246,.04);}
+
+/* BADGE */
+.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:20px;font-size:10.5px;font-weight:600;}
+.b-g{background:rgba(5,150,105,.1);color:#065f46;}
+.b-p{background:rgba(124,58,237,.1);color:#5b21b6;}
+.b-y{background:rgba(217,119,6,.1);color:#92400e;}
+.b-r{background:rgba(220,38,38,.1);color:#991b1b;}
+.b-w{background:rgba(109,40,217,.07);color:var(--wh3);}
+.ldot{width:5px;height:5px;border-radius:50%;background:var(--gr);display:inline-block;animation:bl 1.4s infinite;}
+@keyframes bl{0%,100%{opacity:1;}50%{opacity:.2;}}
+
+/* FORM */
+.fg{margin-bottom:13px;}
+.fl{font-size:11.5px;color:var(--wh2);margin-bottom:5px;display:block;font-weight:600;}
+.fi,.fs,.fta{width:100%;padding:8px 11px;border-radius:8px;background:#fff;border:1px solid var(--bd);color:var(--wh);font-family:'Nunito',sans-serif;font-size:12.5px;transition:border-color .15s,box-shadow .15s;outline:none;}
+.fi:focus,.fs:focus,.fta:focus{border-color:var(--pr2);box-shadow:0 0 0 3px rgba(139,92,246,.12);}
+.fi::placeholder{color:var(--mu);}
+.fs option{background:#fff;color:var(--wh);}
+.fta{resize:vertical;min-height:75px;}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+
+/* UPLOAD */
+.uz{border:2px dashed rgba(124,58,237,.25);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:13px;background:rgba(139,92,246,.03);}
+.uz:hover{border-color:var(--pr);background:rgba(139,92,246,.07);}
+.uz-ic{font-size:24px;margin-bottom:6px;}
+.uz-tx{font-size:12px;color:var(--mu);}
+.uz-tx strong{color:var(--wh2);}
+
+/* PROGRESS */
+.pw{margin-bottom:11px;}
+.pt{display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:4px;color:var(--wh2);}
+.pb2{height:5px;background:var(--s2);border-radius:3px;overflow:hidden;}
+.pf{height:100%;border-radius:3px;background:linear-gradient(90deg,#5b21b6,#8b5cf6);}
+
+/* RESULT BOXES */
+.rrow{display:flex;gap:10px;margin-bottom:14px;}
+.rb{flex:1;text-align:center;padding:13px 8px;border-radius:10px;}
+.rb.q{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.18);}
+.rb.nq{background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.18);}
+.rb.ho{background:rgba(217,119,6,.07);border:1px solid rgba(217,119,6,.18);}
+.rn{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;}
+.rb.q .rn{color:#065f46;} .rb.nq .rn{color:#991b1b;} .rb.ho .rn{color:#92400e;}
+.rl{font-size:10.5px;color:var(--mu);margin-top:2px;}
+
+/* DONUT */
+.dw{display:flex;align-items:center;justify-content:center;gap:20px;}
+.donut{width:90px;height:90px;border-radius:50%;background:conic-gradient(#059669 0% 68%,#dc2626 68% 83%,#d97706 83% 100%);position:relative;flex-shrink:0;}
+.donut::after{content:'68%';position:absolute;inset:15px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:13px;color:#065f46;}
+.di{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--wh2);}
+.dd{width:8px;height:8px;border-radius:3px;flex-shrink:0;}
+
+/* CENTRE CARD */
+.cntc{background:#fff;border-radius:10px;padding:12px;border:1px solid var(--bd);box-shadow:0 1px 4px rgba(109,40,217,.06);}
+.cntc-n{font-size:12.5px;font-weight:700;margin-bottom:7px;color:var(--wh);}
+.cs-row{display:flex;gap:10px;margin-bottom:7px;}
+.csb{font-size:11px;color:var(--mu);}
+.csb strong{color:var(--wh);font-size:13.5px;display:block;}
+.cap{height:4px;background:var(--s2);border-radius:2px;overflow:hidden;}
+.cap-f{height:100%;border-radius:2px;background:linear-gradient(90deg,#5b21b6,#8b5cf6);}
+
+/* SESSION CARD */
+.secard{background:#fff;border-radius:10px;padding:11px;border:1px solid var(--bd);box-shadow:0 1px 4px rgba(109,40,217,.06);}
+.se-id{font-family:'Syne',sans-serif;font-size:11px;color:var(--pr);margin-bottom:2px;}
+.se-nm{font-size:12.5px;font-weight:600;color:var(--wh);}
+.se-info{font-size:10.5px;color:var(--mu);margin-top:2px;}
+.se-live{display:inline-flex;align-items:center;gap:4px;margin-top:6px;font-size:10.5px;color:#059669;}
+
+/* FLOW CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:5px;align-items:center;}
+.chip{padding:3px 10px;border-radius:20px;font-size:11px;background:rgba(124,58,237,.08);color:#5b21b6;border:1px solid rgba(124,58,237,.2);font-weight:600;}
+.chip-arr{color:var(--mu);font-size:11px;}
+
+/* ACTIVITY */
+.ai{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid rgba(139,92,246,.07);align-items:flex-start;}
+.ai:last-child{border-bottom:none;}
+.ai-ic{width:27px;height:27px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;margin-top:1px;}
+.ai-ic.p{background:rgba(124,58,237,.1);} .ai-ic.g{background:rgba(5,150,105,.1);} .ai-ic.r{background:rgba(220,38,38,.1);} .ai-ic.y{background:rgba(217,119,6,.1);}
+.ai-tx{font-size:12px;line-height:1.45;color:var(--wh2);}
+.ai-tm{font-size:10px;color:var(--mu);margin-top:1px;}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(76,29,149,.25);backdrop-filter:blur(4px);z-index:500;display:none;align-items:center;justify-content:center;}
+.overlay.open{display:flex;}
+.modal{background:#fff;border:1px solid var(--bd2);border-radius:14px;width:500px;max-width:93vw;max-height:87vh;overflow-y:auto;animation:mUp .2s ease;box-shadow:0 20px 60px rgba(76,29,149,.2);}
+@keyframes mUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.mh{padding:16px 18px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,var(--s2),#fff);}
+.mt{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--wh);}
+.mx{width:28px;height:28px;border-radius:7px;background:#fff;border:1px solid var(--bd);color:var(--wh2);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.mx:hover{background:var(--s2);}
+.mb{padding:18px;}
+.mf{padding:12px 18px;border-top:1px solid var(--bd);display:flex;justify-content:flex-end;gap:8px;background:#fff;}
+
+/* TOAST */
+#tc{position:fixed;bottom:20px;right:20px;z-index:900;display:flex;flex-direction:column;gap:7px;}
+.toast{padding:10px 14px;border-radius:9px;font-size:12.5px;color:var(--wh);display:flex;align-items:center;gap:8px;min-width:220px;animation:tIn .22s ease;border:1px solid var(--bd2);box-shadow:0 6px 24px rgba(76,29,149,.18);}
+@keyframes tIn{from{opacity:0;transform:translateX(18px);}to{opacity:1;transform:translateX(0);}}
+.toast.success{background:#fff;border-color:rgba(5,150,105,.35);color:#065f46;}
+.toast.error{background:#fff;border-color:rgba(220,38,38,.35);color:#991b1b;}
+.toast.info{background:#fff;border-color:rgba(124,58,237,.35);color:#5b21b6;}
+
+/* SETTINGS ROW */
+.sr{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--bd);}
+.sr:last-child{border-bottom:none;}
+.sr .slbl{font-size:13px;font-weight:600;color:var(--wh);}
+.sr .sdsc{font-size:11px;color:var(--mu);margin-top:2px;}
+.tgl{width:38px;height:20px;border-radius:10px;background:var(--s2);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+.tgl.on{background:var(--pr2);}
+.tgl::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;top:3px;left:3px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+.tgl.on::after{left:21px;}
+
+/* QPACK ITEM */
+.qpi{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(139,92,246,.07);}
+.qpi:last-child{border-bottom:none;}
+.qpl{display:flex;align-items:center;gap:10px;}
+.qp-ic{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.qp-ic.xl{background:rgba(5,150,105,.1);} .qp-ic.pd{background:rgba(220,38,38,.1);} .qp-ic.bn{background:rgba(217,119,6,.1);} .qp-ic.ai{background:rgba(124,58,237,.1);}
+.qpn{font-size:12.5px;font-weight:600;color:var(--wh);}
+.qps{font-size:10.5px;color:var(--mu);margin-top:1px;}
+
+/* ADMIT CARD */
+.admit{background:linear-gradient(135deg,#ede9fe,#ddd6fe);border:1px solid rgba(124,58,237,.2);border-radius:13px;padding:18px;position:relative;overflow:hidden;}
+.admit::before{content:'SEB';position:absolute;right:-8px;top:-8px;font-family:'Syne',sans-serif;font-size:80px;font-weight:800;color:rgba(124,58,237,.08);line-height:1;}
+.adm-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+.adm-tl{font-family:'Syne',sans-serif;font-weight:800;font-size:14.5px;color:var(--wh);}
+.adm-sub{font-size:10px;color:var(--mu);margin-top:2px;}
+.adm-flds{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.afl{font-size:9.5px;color:var(--wh3);text-transform:uppercase;letter-spacing:.7px;}
+.afv{font-size:12.5px;font-weight:700;color:var(--wh);margin-top:1px;}
+.adm-bc{height:32px;background:repeating-linear-gradient(90deg,var(--wh3) 0,var(--wh3) 2px,transparent 2px,transparent 6px);border-radius:3px;opacity:.3;margin-top:12px;}
+
+/* SECTION HEAD */
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.st{font-family:'Syne',sans-serif;font-weight:700;font-size:14.5px;color:var(--wh);}
+
+/* ANALYTICS BAR */
+.abar{flex:1;border-radius:4px 4px 0 0;transition:opacity .2s;}
+.abar:hover{opacity:1!important;}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="logo-wrap">
+    <div class="logo-icon">SEB</div>
+    <div class="logo-text">Admin Console<small>Exam Portal · GOI</small></div>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-lbl">Overview</div>
+    <div class="nav-item on" data-page="dashboard"><span class="nav-icon">▦</span>Dashboard</div>
+    <div class="nav-item" data-page="analytics"><span class="nav-icon">📊</span>Analytics</div>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-lbl">Content Engine</div>
+    <div class="nav-item" data-page="questions"><span class="nav-icon">📦</span>Question Packs</div>
+    <div class="nav-item" data-page="upload"><span class="nav-icon">📤</span>Upload Centre</div>
+    <div class="nav-item" data-page="allocation"><span class="nav-icon">🤖</span>AI Allocation</div>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-lbl">Candidates</div>
+    <div class="nav-item" data-page="onboarding"><span class="nav-icon">👥</span>Onboarding<span class="nbadge" id="pend-n">0</span></div>
+    <div class="nav-item" data-page="registration"><span class="nav-icon">📝</span>Registration</div>
+    <div class="nav-item" data-page="admitcard"><span class="nav-icon">🪪</span>Admit Cards</div>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-lbl">Exam Ops</div>
+    <div class="nav-item" data-page="centres"><span class="nav-icon">🏢</span>Centre Booking</div>
+    <div class="nav-item" data-page="scheduling"><span class="nav-icon">⏱</span>Scheduling</div>
+    <div class="nav-item" data-page="sessions"><span class="nav-icon">📡</span>Live Sessions</div>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-lbl">Results</div>
+    <div class="nav-item" data-page="results"><span class="nav-icon">🏆</span>Result Analysis</div>
+    <div class="nav-item" data-page="cutoff"><span class="nav-icon">✂️</span>Cutoff / Segregation</div>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-lbl">System</div>
+    <div class="nav-item" data-page="controls"><span class="nav-icon">⚙️</span>Admin Controls</div>
+    <div class="nav-item" data-page="permissions"><span class="nav-icon">🔒</span>Permissions</div>
+  </div>
+  <div class="sb-foot">
+    <div class="admin-btn" onclick="goTo('profile')">
+      <div class="av" id="av-txt">SA</div>
+      <div><div class="av-name" id="av-name">Super Admin</div><div class="av-role">Content Authoring Engine</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="ptitle" id="pg-title">Dashboard</div>
+      <div class="bcrumb">Admin Console › <span id="pg-sub">Overview</span></div>
+    </div>
+    <div class="topbar-right">
+      <button class="btn btn-g" id="tb2" onclick="tb2Act()">⬇ Export</button>
+      <button class="btn btn-p" id="tb1" onclick="tb1Act()">＋ New Exam</button>
+      <div class="nbell" onclick="goTo('notifications')">🔔<div class="ndot"></div></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="page on" id="page-dashboard">
+      <div class="sg">
+        <div class="scard cp"><div class="sg-glow"></div><div class="si">👥</div><div class="sv" id="dc">0</div><div class="sl">Registered Candidates</div><div class="sd cup" id="dc-d">—</div></div>
+        <div class="scard cg"><div class="sg-glow"></div><div class="si">📝</div><div class="sv" id="de">0</div><div class="sl">Active Exams</div><div class="sd cnu" id="de-d">—</div></div>
+        <div class="scard cy"><div class="sg-glow"></div><div class="si">🏢</div><div class="sv" id="dct">0</div><div class="sl">Booked Centres</div><div class="sd cnu">Channel → 300 seats each</div></div>
+        <div class="scard cr"><div class="sg-glow"></div><div class="si">📦</div><div class="sv" id="dq">0</div><div class="sl">Question Packs</div><div class="sd cdn" id="dq-d">—</div></div>
+      </div>
+      <div class="g3">
+        <div class="panel">
+          <div class="ph"><div class="ph-t">👥 Recent Onboarding</div><button class="lbtn" onclick="goTo('onboarding')">View all →</button></div>
+          <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Name</th><th>Reg ID</th><th>Exam</th><th>Status</th></tr></thead><tbody id="d-ct"></tbody></table></div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="ph-t">⏱ Upcoming Exams</div><button class="lbtn" onclick="openM('add-exam')">＋ Add</button></div>
+          <div class="pb" id="d-el" style="padding-top:8px;"></div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="ph-t">⚡ Activity Feed</div></div>
+          <div class="pb" style="padding:4px 12px;" id="d-af"></div>
+        </div>
+      </div>
+      <div class="g2">
+        <div class="panel">
+          <div class="ph"><div class="ph-t">📦 Question Packs</div><button class="lbtn" onclick="goTo('questions')">Manage →</button></div>
+          <div class="pb" id="d-qpl"></div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="ph-t">🏆 Result Snapshot</div><button class="lbtn" onclick="goTo('results')">Full report →</button></div>
+          <div class="pb">
+            <div class="rrow"><div class="rb q"><div class="rn" id="d-ql">—</div><div class="rl">Qualified</div></div><div class="rb nq"><div class="rn" id="d-nql">—</div><div class="rl">Not Qualified</div></div><div class="rb ho"><div class="rn" id="d-hl">—</div><div class="rl">On Hold</div></div></div>
+            <div class="dw"><div class="donut"></div><div style="display:flex;flex-direction:column;gap:6px;"><div class="di"><div class="dd" style="background:var(--gr)"></div>Qualified 68%</div><div class="di"><div class="dd" style="background:var(--rd)"></div>Not Qual. 15%</div><div class="di"><div class="dd" style="background:var(--yw)"></div>On Hold 17%</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ONBOARDING -->
+    <div class="page" id="page-onboarding">
+      <div class="sh"><div class="st">Candidate Onboarding</div><button class="btn btn-p" onclick="openM('add-cand')">＋ Add Candidate</button></div>
+      <div class="panel">
+        <div class="ph">
+          <div class="ph-t">All Candidates</div>
+          <div style="display:flex;gap:7px">
+            <input class="fi" style="width:175px;padding:5px 10px;font-size:11.5px" placeholder="🔍 Search name/ID…" id="cs-q" oninput="rCands()">
+            <select class="fs" style="width:120px;padding:5px 10px;font-size:11.5px" id="cs-f" onchange="rCands()"><option value="">All Status</option><option>Active</option><option>Pending</option><option>Verified</option><option>Failed</option></select>
+          </div>
+        </div>
+        <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Name</th><th>Reg ID</th><th>Exam</th><th>City</th><th>Cat.</th><th>Status</th><th>Actions</th></tr></thead><tbody id="cands-tb"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- REGISTRATION -->
+    <div class="page" id="page-registration">
+      <div class="sh"><div class="st">Registration Management</div><button class="btn btn-p" onclick="openM('add-cand')">＋ New Registration</button></div>
+      <div class="g2">
+        <div class="panel"><div class="ph"><div class="ph-t">📝 Registration Config</div></div>
+          <div class="pb">
+            <div class="sr"><div><div class="slbl">Require Photo Upload</div><div class="sdsc">Candidate must upload passport photo</div></div><div class="tgl on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="sr"><div><div class="slbl">ID Proof Mandatory</div><div class="sdsc">Aadhaar / PAN / Passport</div></div><div class="tgl on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="sr"><div><div class="slbl">City Priority Selection</div><div class="sdsc">Allow candidates to pick preferred city</div></div><div class="tgl on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="sr"><div><div class="slbl">PwD Category Field</div><div class="sdsc">Enable PwD declaration in form</div></div><div class="tgl on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="sr"><div><div class="slbl">Auto-generate User ID</div><div class="sdsc">System assigns ID on registration</div></div><div class="tgl on" onclick="this.classList.toggle('on')"></div></div>
+          </div>
+        </div>
+        <div class="panel"><div class="ph"><div class="ph-t">📊 Registration Progress</div></div>
+          <div class="pb">
+            <div class="pw"><div class="pt"><span>MCA 2026</span><span style="color:#5b21b6">4,200 / 5,000</span></div><div class="pb2"><div class="pf" style="width:84%"></div></div></div>
+            <div class="pw"><div class="pt"><span>BCA 2026</span><span style="color:#5b21b6">3,100 / 4,000</span></div><div class="pb2"><div class="pf" style="width:77%"></div></div></div>
+            <div class="pw"><div class="pt"><span>MBA Entrance</span><span style="color:#5b21b6">5,180 / 6,000</span></div><div class="pb2"><div class="pf" style="width:86%"></div></div></div>
+            <div style="margin-top:13px;padding-top:13px;border-top:1px solid var(--bd)">
+              <div class="fr">
+                <div class="fg" style="margin-bottom:0"><label class="fl">Open Date</label><input class="fi" type="date" value="2026-03-01"></div>
+                <div class="fg" style="margin-bottom:0"><label class="fl">Close Date</label><input class="fi" type="date" value="2026-04-15"></div>
+              </div>
+              <button class="btn btn-p" style="width:100%;margin-top:11px" onclick="toast('Registration window saved','success')">Save Window</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIT CARDS -->
+    <div class="page" id="page-admitcard">
+      <div class="sh"><div class="st">Admit Card Management</div><button class="btn btn-p" onclick="genAdmit()">⚡ Generate All</button></div>
+      <div class="g2">
+        <div class="panel"><div class="ph"><div class="ph-t">🪪 Preview</div></div>
+          <div class="pb">
+            <div class="admit">
+              <div class="adm-hd"><div><div class="adm-tl">Government of India</div><div class="adm-sub">Computer Based Test · Admit Card 2026</div></div><div class="logo-icon" style="width:32px;height:32px;font-size:10px;box-shadow:none">SEB</div></div>
+              <div class="adm-flds">
+                <div><div class="afl">Candidate</div><div class="afv" id="ac-nm">Thanuja R.</div></div>
+                <div><div class="afl">Reg No.</div><div class="afv" id="ac-rg">12345</div></div>
+                <div><div class="afl">Exam</div><div class="afv" id="ac-ex">MCA 2026</div></div>
+                <div><div class="afl">Seat No.</div><div class="afv" id="ac-st">45</div></div>
+                <div><div class="afl">Centre</div><div class="afv" id="ac-ct">Bengaluru</div></div>
+                <div><div class="afl">Shift</div><div class="afv">Shift A</div></div>
+              </div>
+              <div class="adm-bc"></div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:12px">
+              <button class="btn btn-g" style="flex:1" onclick="toast('PDF downloaded','info')">⬇ Download</button>
+              <button class="btn btn-p" style="flex:1" onclick="toast('Card emailed to candidate','success')">📧 Email</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel"><div class="ph"><div class="ph-t">📋 Batch Generate</div></div>
+          <div class="pb">
+            <div class="fg"><label class="fl">Select Exam</label><select class="fs" id="ac-ex-s"><option>MCA 2026</option><option>BCA 2026</option><option>MBA Entrance</option></select></div>
+            <div class="fg"><label class="fl">Select Candidate</label><select class="fs" id="ac-cs" onchange="updAdmit()"></select></div>
+            <div class="rrow">
+              <div class="rb q" style="padding:10px"><div class="rn" style="font-size:17px" id="ac-gen">—</div><div class="rl">Generated</div></div>
+              <div class="rb ho" style="padding:10px"><div class="rn" style="font-size:17px" id="ac-pnd">—</div><div class="rl">Pending</div></div>
+              <div class="rb nq" style="padding:10px"><div class="rn" style="font-size:17px" id="ac-fail">—</div><div class="rl">Blocked</div></div>
+            </div>
+            <button class="btn btn-p" style="width:100%;margin-top:10px" onclick="genAdmit()">Generate Batch</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUESTION PACKS -->
+    <div class="page" id="page-questions">
+      <div class="sh"><div class="st">Question Packs — Content Engine</div><button class="btn btn-p" onclick="openM('add-qp')">＋ Add Pack</button></div>
+      <div class="g2">
+        <div class="panel">
+          <div class="ph">
+            <div class="ph-t">📦 All Packs</div>
+            <div style="display:flex;gap:4px">
+              <button class="btn btn-g btn-sm on-tab" onclick="fqp('all',this)">All</button>
+              <button class="btn btn-g btn-sm" onclick="fqp('CBT',this)">CBT</button>
+              <button class="btn btn-g btn-sm" onclick="fqp('IBT',this)">IBT</button>
+            </div>
+          </div>
+          <div class="pb" id="qp-list"></div>
+        </div>
+        <div class="panel"><div class="ph"><div class="ph-t">📤 Upload New Pack</div></div>
+          <div class="pb">
+            <div class="uz" onclick="toast('File browser opened','info')"><div class="uz-ic">⬆️</div><div class="uz-tx"><strong>Click to upload</strong><br>Excel · Bond · PDF · AI JSON</div></div>
+            <div class="fg"><label class="fl">Pack Name</label><input class="fi" id="qp-nm" placeholder="e.g. MCA2026_Set_A"></div>
+            <div class="fr">
+              <div class="fg"><label class="fl">Exam</label><select class="fs" id="qp-ex"><option>MCA 2026</option><option>BCA 2026</option><option>MBA Entrance</option></select></div>
+              <div class="fg"><label class="fl">Type</label><select class="fs" id="qp-ty"><option>CBT</option><option>IBT</option><option>CBT+IBT</option></select></div>
+            </div>
+            <div class="fr">
+              <div class="fg"><label class="fl">Questions</label><input class="fi" id="qp-cnt" type="number" placeholder="120"></div>
+              <div class="fg"><label class="fl">Format</label><select class="fs" id="qp-fmt"><option>Excel</option><option>PDF</option><option>Bond</option><option>AI Allocated</option></select></div>
+            </div>
+            <button class="btn btn-p" style="width:100%" onclick="addQP()">Upload & Save Pack</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPLOAD CENTRE -->
+    <div class="page" id="page-upload">
+      <div class="sh"><div class="st">Upload Centre</div></div>
+      <div class="g2">
+        <div class="panel"><div class="ph"><div class="ph-t">👥 Bulk Upload — Candidates</div></div>
+          <div class="pb"><div class="uz"><div class="uz-ic">👥</div><div class="uz-tx"><strong>Upload CSV/Excel</strong><br>Name, RegID, Exam, City, Category</div></div>
+          <button class="btn btn-p" style="width:100%" onclick="toast('120 candidate records imported','success')">Process & Import</button></div>
+        </div>
+        <div class="panel"><div class="ph"><div class="ph-t">📄 Bulk Upload — Questions</div></div>
+          <div class="pb"><div class="uz"><div class="uz-ic">📦</div><div class="uz-tx"><strong>Upload Excel/PDF/Bond</strong><br>CBT and IBT formats supported</div></div>
+          <button class="btn btn-p" style="width:100%" onclick="toast('120 questions parsed and uploaded','success')">Parse & Upload</button></div>
+        </div>
+      </div>
+      <div class="panel"><div class="ph"><div class="ph-t">📋 Recent Uploads</div></div>
+        <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>File</th><th>Type</th><th>Records</th><th>By</th><th>Time</th><th>Status</th></tr></thead><tbody id="up-tb"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- AI ALLOCATION -->
+    <div class="page" id="page-allocation">
+      <div class="sh"><div class="st">AI Question Allocation</div></div>
+      <div class="g2">
+        <div class="panel"><div class="ph"><div class="ph-t">🤖 Configure Allocation</div></div>
+          <div class="pb">
+            <div class="fg"><label class="fl">Select Exam</label><select class="fs"><option>MCA 2026</option><option>BCA 2026</option><option>MBA Entrance</option></select></div>
+            <div class="fg"><label class="fl">Difficulty Split</label>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px">
+                <div><label class="fl" style="font-size:10.5px">Easy %</label><input class="fi" type="number" value="30"></div>
+                <div><label class="fl" style="font-size:10.5px">Medium %</label><input class="fi" type="number" value="50"></div>
+                <div><label class="fl" style="font-size:10.5px">Hard %</label><input class="fi" type="number" value="20"></div>
+              </div>
+            </div>
+            <div class="fg"><label class="fl">Total Questions per Candidate</label><input class="fi" type="number" value="120"></div>
+            <div class="fg" style="margin-bottom:0"><div style="display:flex;align-items:center;justify-content:space-between"><label class="fl" style="margin-bottom:0">Randomise per Candidate</label><div class="tgl on" onclick="this.classList.toggle('on')"></div></div></div>
+            <button class="btn btn-p" style="width:100%;margin-top:13px" onclick="toast('AI allocation complete — 120 Qs per candidate','success')">⚡ Run AI Allocation</button>
+          </div>
+        </div>
+        <div class="panel"><div class="ph"><div class="ph-t">📊 Allocation Status</div></div>
+          <div class="pb">
+            <div class="pw"><div class="pt"><span>MCA 2026</span><span style="color:#059669">✅ Complete</span></div><div class="pb2"><div class="pf" style="width:100%"></div></div></div>
+            <div class="pw"><div class="pt"><span>BCA 2026</span><span style="color:#d97706">⏳ 62%</span></div><div class="pb2"><div class="pf" style="width:62%"></div></div></div>
+            <div class="pw"><div class="pt"><span>MBA Entrance</span><span style="color:var(--mu)">— Pending</span></div><div class="pb2"><div class="pf" style="width:0%"></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTRES -->
+    <div class="page" id="page-centres">
+      <div class="sh"><div class="st">Centre Booking</div><button class="btn btn-p" onclick="openM('add-ctr')">＋ Add Centre</button></div>
+      <div style="font-size:12px;color:var(--wh2);margin-bottom:14px;background:#fff;padding:9px 13px;border-radius:8px;border:1px solid var(--bd)">📌 Channel → 300 seats per centre · 30 Node/PhD · 230 Standard</div>
+      <div class="panel"><div class="ph"><div class="ph-t">🏢 All Centres</div></div>
+        <div class="pb"><div class="g3c" id="centres-grid"></div></div>
+      </div>
+    </div>
+
+    <!-- SCHEDULING -->
+    <div class="page" id="page-scheduling">
+      <div class="sh"><div class="st">Exam Scheduling</div><button class="btn btn-p" onclick="openM('add-exam')">＋ New Exam</button></div>
+      <div class="panel"><div class="ph"><div class="ph-t">📅 Scheduled Exams</div></div>
+        <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Exam</th><th>Date</th><th>Shift</th><th>Duration</th><th>Candidates</th><th>Centres</th><th>Status</th><th>Actions</th></tr></thead><tbody id="exams-tb"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- LIVE SESSIONS -->
+    <div class="page" id="page-sessions">
+      <div class="sh"><div class="st">Live Session Monitor</div><span class="badge b-g"><span class="ldot"></span>&nbsp;<span id="lv-cnt">0</span> Active</span></div>
+      <div class="panel" style="margin-bottom:14px"><div class="ph"><div class="ph-t">🔑 Exam Login Flow</div></div>
+        <div class="pb"><div class="chips">
+          <span class="chip">User ID</span><span class="chip-arr">→</span><span class="chip">Password</span><span class="chip-arr">→</span><span class="chip">Instructions</span><span class="chip-arr">→</span><span class="chip">Timer</span><span class="chip-arr">→</span><span class="chip">Photo Verify</span><span class="chip-arr">→</span><span class="chip">Shift Confirm</span><span class="chip-arr">→</span><span class="chip" style="background:rgba(5,150,105,.12);color:#059669;border-color:rgba(16,185,129,.25)">Start → Session ID</span>
+        </div></div>
+      </div>
+      <div class="g4" id="sessions-grid"></div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="page" id="page-results">
+      <div class="sh"><div class="st">Result Analysis</div><button class="btn btn-g" onclick="toast('Results exported to Excel','success')">⬇ Export</button></div>
+      <div class="g2">
+        <div class="panel"><div class="ph"><div class="ph-t">🏆 MCA 2026 Summary</div></div>
+          <div class="pb">
+            <div class="rrow"><div class="rb q"><div class="rn">2,840</div><div class="rl">Qualified</div></div><div class="rb nq"><div class="rn">1,020</div><div class="rl">Not Qualified</div></div><div class="rb ho"><div class="rn">340</div><div class="rl">On Hold</div></div></div>
+            <div class="dw"><div class="donut"></div><div style="display:flex;flex-direction:column;gap:6px"><div class="di"><div class="dd" style="background:var(--gr)"></div>Qualified 68%</div><div class="di"><div class="dd" style="background:var(--rd)"></div>Not Qual. 15%</div><div class="di"><div class="dd" style="background:var(--yw)"></div>On Hold 17%</div></div></div>
+          </div>
+        </div>
+        <div class="panel"><div class="ph"><div class="ph-t">🥇 Top Scorers</div></div>
+          <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>#</th><th>Name</th><th>Score</th><th>%</th><th>Status</th></tr></thead><tbody id="results-tb"></tbody></table></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CUTOFF -->
+    <div class="page" id="page-cutoff">
+      <div class="sh"><div class="st">Cutoff Segregation</div><button class="btn btn-p" onclick="openM('set-cut')">✏️ Set Cutoffs</button></div>
+      <div class="g2">
+        <div class="panel"><div class="ph"><div class="ph-t">✂️ Category Cutoffs — MCA 2026</div></div><div class="pb" id="cutoff-bars"></div></div>
+        <div class="panel"><div class="ph"><div class="ph-t">📊 Segregation Table</div></div>
+          <div class="pb">
+            <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Category</th><th>Cutoff</th><th>Qualified</th><th>Not Qual.</th></tr></thead><tbody id="cut-tb"></tbody></table></div>
+            <button class="btn btn-gr" style="width:100%;margin-top:12px" onclick="toast('Results published to candidates portal','success')">📢 Publish Results</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN CONTROLS -->
+    <div class="page" id="page-controls">
+      <div class="sh"><div class="st">Admin Controls</div></div>
+      <div class="g5">
+        <div class="panel" style="cursor:pointer" onclick="goTo('scheduling')"><div class="pb" style="text-align:center;padding:18px 12px"><div style="font-size:26px;margin-bottom:8px">⏰</div><div style="font-weight:700;font-size:12.5px">Edit Timing</div><div style="font-size:11px;color:var(--mu);margin-top:3px">Shift / Duration</div></div></div>
+        <div class="panel" style="cursor:pointer" onclick="openM('city-pri')"><div class="pb" style="text-align:center;padding:18px 12px"><div style="font-size:26px;margin-bottom:8px">🏙</div><div style="font-weight:700;font-size:12.5px">City Priority</div><div style="font-size:11px;color:var(--mu);margin-top:3px">Allocation rules</div></div></div>
+        <div class="panel" style="cursor:pointer" onclick="openM('reset-pw')"><div class="pb" style="text-align:center;padding:18px 12px"><div style="font-size:26px;margin-bottom:8px">🔐</div><div style="font-weight:700;font-size:12.5px">User ID / PW</div><div style="font-size:11px;color:var(--mu);margin-top:3px">Credential reset</div></div></div>
+        <div class="panel" style="cursor:pointer" onclick="openM('sbt-cfg')"><div class="pb" style="text-align:center;padding:18px 12px"><div style="font-size:26px;margin-bottom:8px">🖥</div><div style="font-weight:700;font-size:12.5px">SBT Config</div><div style="font-size:11px;color:var(--mu);margin-top:3px">Secure Browser</div></div></div>
+        <div class="panel" style="cursor:pointer" onclick="toast('Audit log exported — sebadmin_log.csv','success')"><div class="pb" style="text-align:center;padding:18px 12px"><div style="font-size:26px;margin-bottom:8px">💾</div><div style="font-weight:700;font-size:12.5px">Backup / Logs</div><div style="font-size:11px;color:var(--mu);margin-top:3px">Audit trail</div></div></div>
+      </div>
+      <div class="panel"><div class="ph"><div class="ph-t">⚙️ Global Settings</div></div>
+        <div class="pb">
+          <div class="sr"><div><div class="slbl">SBT (Secure Browser Testing) Mode</div><div class="sdsc">Enforce SBT for all exams</div></div><div class="tgl on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="sr"><div><div class="slbl">NetBoot Mode</div><div class="sdsc">Separate OS boot for high-security centres</div></div><div class="tgl" onclick="this.classList.toggle('on')"></div></div>
+          <div class="sr"><div><div class="slbl">Auto Session Termination</div><div class="sdsc">End session if candidate inactive 10 min</div></div><div class="tgl on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="sr"><div><div class="slbl">Photo Verification on Login</div><div class="sdsc">Mandatory face capture at exam start</div></div><div class="tgl on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="sr"><div><div class="slbl">Email Notifications</div><div class="sdsc">Automated emails on key events</div></div><div class="tgl on" onclick="this.classList.toggle('on')"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PERMISSIONS -->
+    <div class="page" id="page-permissions">
+      <div class="sh"><div class="st">User Permissions</div><button class="btn btn-p" onclick="openM('add-adm')">＋ Add Admin</button></div>
+      <div class="panel"><div style="overflow-x:auto"><table class="tbl">
+        <thead><tr><th>Name</th><th>Role</th><th>Access Level</th><th>Last Login</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr><td>Super Admin</td><td>System Admin</td><td><span class="badge b-p">Full Access</span></td><td style="color:var(--mu)">Just now</td><td><span class="badge b-g">Active</span></td><td><button class="btn btn-g btn-sm" onclick="toast('Edit user opened','info')">Edit</button></td></tr>
+          <tr><td>Content Manager</td><td>Author</td><td><span class="badge b-w">Content+Upload</span></td><td style="color:var(--mu)">2 hrs ago</td><td><span class="badge b-g">Active</span></td><td><button class="btn btn-g btn-sm">Edit</button></td></tr>
+          <tr><td>Exam Coordinator</td><td>Operator</td><td><span class="badge b-y">Exams+Centres</span></td><td style="color:var(--mu)">Yesterday</td><td><span class="badge b-g">Active</span></td><td><button class="btn btn-g btn-sm">Edit</button></td></tr>
+          <tr><td>Data Analyst</td><td>Viewer</td><td><span class="badge b-w">Results Only</span></td><td style="color:var(--mu)">3 days ago</td><td><span class="badge b-y">Inactive</span></td><td><div style="display:flex;gap:5px"><button class="btn btn-g btn-sm">Edit</button><button class="btn btn-r btn-sm" onclick="toast('User removed','info')">Remove</button></div></td></tr>
+        </tbody>
+      </table></div></div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div class="page" id="page-analytics">
+      <div class="sh"><div class="st">Analytics Overview</div></div>
+      <div class="g2">
+        <div class="panel"><div class="ph"><div class="ph-t">📈 Registrations — Monthly</div></div>
+          <div class="pb">
+            <div style="height:140px;display:flex;align-items:flex-end;gap:6px;border-bottom:1px solid var(--bd);padding-bottom:6px" id="reg-chart"></div>
+            <div style="display:flex;justify-content:space-between;padding-top:5px;font-size:10px;color:var(--mu)" id="reg-lbl"></div>
+          </div>
+        </div>
+        <div class="panel"><div class="ph"><div class="ph-t">📊 Score Distribution</div></div>
+          <div class="pb">
+            <div style="height:140px;display:flex;align-items:flex-end;gap:7px;border-bottom:1px solid var(--bd);padding-bottom:6px" id="score-chart"></div>
+            <div style="display:flex;justify-content:space-between;padding-top:5px;font-size:10px;color:var(--mu)"><span>0–20</span><span>21–40</span><span>41–60</span><span>61–80</span><span>81–100</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel"><div class="ph"><div class="ph-t">📋 Exam-wise Summary</div></div>
+        <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Exam</th><th>Registered</th><th>Appeared</th><th>Qualified</th><th>Pass %</th><th>Avg Score</th></tr></thead>
+          <tbody><tr><td>MCA 2026</td><td>4,200</td><td>3,980</td><td>2,700</td><td><span class="badge b-g">67.8%</span></td><td>61.4</td></tr><tr><td>BCA 2026</td><td>3,100</td><td>2,890</td><td>1,950</td><td><span class="badge b-g">67.5%</span></td><td>58.9</td></tr><tr><td>MBA Entrance</td><td>5,180</td><td>—</td><td>—</td><td><span class="badge b-y">Upcoming</span></td><td>—</td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div class="page" id="page-notifications">
+      <div class="sh"><div class="st">Notifications</div><button class="btn btn-g" onclick="markAllRead()">Mark all read</button></div>
+      <div class="panel"><div id="notif-list"></div></div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="page" id="page-profile">
+      <div class="sh"><div class="st">Admin Profile</div></div>
+      <div class="g2">
+        <div class="panel"><div class="ph"><div class="ph-t">👤 Profile Details</div></div>
+          <div class="pb">
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+              <div class="av" style="width:50px;height:50px;font-size:18px" id="pf-av">SA</div>
+              <div><div style="font-size:15px;font-weight:700" id="pf-nm">Super Admin</div><div style="font-size:11px;color:var(--pr)">Content Authoring Engine</div></div>
+            </div>
+            <div class="fg"><label class="fl">Full Name</label><input class="fi" id="p-nm" value="Super Admin"></div>
+            <div class="fg"><label class="fl">Email</label><input class="fi" id="p-em" type="email" value="admin@seb.gov.in"></div>
+            <div class="fg"><label class="fl">Phone</label><input class="fi" id="p-ph" value="+91 98765 43210"></div>
+            <button class="btn btn-p" style="width:100%" onclick="savePf()">Save Changes</button>
+          </div>
+        </div>
+        <div class="panel"><div class="ph"><div class="ph-t">🔐 Change Password</div></div>
+          <div class="pb">
+            <div class="fg"><label class="fl">Current Password</label><input class="fi" type="password" placeholder="••••••••"></div>
+            <div class="fg"><label class="fl">New Password</label><input class="fi" type="password" placeholder="••••••••"></div>
+            <div class="fg"><label class="fl">Confirm Password</label><input class="fi" type="password" placeholder="••••••••"></div>
+            <button class="btn btn-p" style="width:100%" onclick="toast('Password updated successfully','success')">Update Password</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- MODALS -->
+<div class="overlay" id="m-add-cand"><div class="modal">
+  <div class="mh"><div class="mt">➕ Add Candidate</div><button class="mx" onclick="closeM('add-cand')">✕</button></div>
+  <div class="mb">
+    <div class="fr"><div class="fg"><label class="fl">Full Name *</label><input class="fi" id="nc-nm" placeholder="Candidate full name"></div><div class="fg"><label class="fl">Reg ID</label><input class="fi" id="nc-id" placeholder="Auto-generated"></div></div>
+    <div class="fr"><div class="fg"><label class="fl">Exam *</label><select class="fs" id="nc-ex"><option>MCA 2026</option><option>BCA 2026</option><option>MBA Entrance</option></select></div><div class="fg"><label class="fl">City</label><input class="fi" id="nc-cy" placeholder="e.g. Bengaluru"></div></div>
+    <div class="fr"><div class="fg"><label class="fl">Category</label><select class="fs" id="nc-cat"><option>General</option><option>OBC</option><option>SC</option><option>ST</option><option>PwD</option></select></div><div class="fg"><label class="fl">Status</label><select class="fs" id="nc-st"><option>Pending</option><option>Active</option><option>Verified</option></select></div></div>
+  </div>
+  <div class="mf"><button class="btn btn-g" onclick="closeM('add-cand')">Cancel</button><button class="btn btn-p" onclick="addCand()">Add Candidate</button></div>
+</div></div>
+
+<div class="overlay" id="m-add-exam"><div class="modal">
+  <div class="mh"><div class="mt">📝 Schedule New Exam</div><button class="mx" onclick="closeM('add-exam')">✕</button></div>
+  <div class="mb">
+    <div class="fg"><label class="fl">Exam Name *</label><input class="fi" id="ne-nm" placeholder="e.g. MCA 2026"></div>
+    <div class="fr"><div class="fg"><label class="fl">Date *</label><input class="fi" id="ne-dt" type="date"></div><div class="fg"><label class="fl">Shift</label><select class="fs" id="ne-sh"><option>Shift A (9AM–12PM)</option><option>Shift B (2PM–5PM)</option><option>Full Day</option></select></div></div>
+    <div class="fr"><div class="fg"><label class="fl">Duration (hrs)</label><input class="fi" id="ne-dr" type="number" value="2"></div><div class="fg"><label class="fl">Max Candidates</label><input class="fi" id="ne-cn" type="number" placeholder="5000"></div></div>
+    <div class="fg"><label class="fl">No. of Centres</label><input class="fi" id="ne-ct" type="number" placeholder="15"></div>
+  </div>
+  <div class="mf"><button class="btn btn-g" onclick="closeM('add-exam')">Cancel</button><button class="btn btn-p" onclick="addExam()">Schedule Exam</button></div>
+</div></div>
+
+<div class="overlay" id="m-add-ctr"><div class="modal">
+  <div class="mh"><div class="mt">🏢 Add Exam Centre</div><button class="mx" onclick="closeM('add-ctr')">✕</button></div>
+  <div class="mb">
+    <div class="fg"><label class="fl">Centre Name *</label><input class="fi" id="nct-nm" placeholder="e.g. Bengaluru Node Centre"></div>
+    <div class="fr"><div class="fg"><label class="fl">City *</label><input class="fi" id="nct-cy" placeholder="City"></div><div class="fg"><label class="fl">Type</label><select class="fs" id="nct-ty"><option>Standard</option><option>Node</option><option>PhD Slot</option></select></div></div>
+    <div class="fr"><div class="fg"><label class="fl">Total Seats</label><input class="fi" id="nct-st" type="number" value="300"></div><div class="fg"><label class="fl">Node Slots</label><input class="fi" id="nct-nd" type="number" value="30"></div></div>
+  </div>
+  <div class="mf"><button class="btn btn-g" onclick="closeM('add-ctr')">Cancel</button><button class="btn btn-p" onclick="addCtr()">Add Centre</button></div>
+</div></div>
+
+<div class="overlay" id="m-add-qp"><div class="modal">
+  <div class="mh"><div class="mt">📦 Add Question Pack</div><button class="mx" onclick="closeM('add-qp')">✕</button></div>
+  <div class="mb">
+    <div class="fg"><label class="fl">Pack Name *</label><input class="fi" id="nqp-nm" placeholder="e.g. MCA2026_SetC"></div>
+    <div class="fr"><div class="fg"><label class="fl">Exam</label><select class="fs" id="nqp-ex"><option>MCA 2026</option><option>BCA 2026</option><option>MBA Entrance</option></select></div><div class="fg"><label class="fl">Type</label><select class="fs" id="nqp-ty"><option>CBT</option><option>IBT</option><option>CBT+IBT</option></select></div></div>
+    <div class="fr"><div class="fg"><label class="fl">Questions</label><input class="fi" id="nqp-cnt" type="number" placeholder="120"></div><div class="fg"><label class="fl">Format</label><select class="fs" id="nqp-fmt"><option>Excel</option><option>PDF</option><option>Bond</option><option>AI Allocated</option></select></div></div>
+  </div>
+  <div class="mf"><button class="btn btn-g" onclick="closeM('add-qp')">Cancel</button><button class="btn btn-p" onclick="addQPM()">Save Pack</button></div>
+</div></div>
+
+<div class="overlay" id="m-set-cut"><div class="modal">
+  <div class="mh"><div class="mt">✂️ Set Cutoff Marks</div><button class="mx" onclick="closeM('set-cut')">✕</button></div>
+  <div class="mb">
+    <div class="fg"><label class="fl">Exam</label><select class="fs"><option>MCA 2026</option><option>BCA 2026</option></select></div>
+    <div class="fr"><div class="fg"><label class="fl">General</label><input class="fi" id="cut-gn" type="number" value="78"></div><div class="fg"><label class="fl">OBC</label><input class="fi" id="cut-ob" type="number" value="68"></div></div>
+    <div class="fr"><div class="fg"><label class="fl">SC/ST</label><input class="fi" id="cut-sc" type="number" value="55"></div><div class="fg"><label class="fl">PwD</label><input class="fi" id="cut-pw" type="number" value="50"></div></div>
+  </div>
+  <div class="mf"><button class="btn btn-g" onclick="closeM('set-cut')">Cancel</button><button class="btn btn-p" onclick="saveCut()">Save Cutoffs</button></div>
+</div></div>
+
+<div class="overlay" id="m-city-pri"><div class="modal">
+  <div class="mh"><div class="mt">🏙 City Priority Config</div><button class="mx" onclick="closeM('city-pri')">✕</button></div>
+  <div class="mb">
+    <div class="fg"><label class="fl">Priority 1</label><input class="fi" value="Bengaluru"></div>
+    <div class="fg"><label class="fl">Priority 2</label><input class="fi" value="Delhi"></div>
+    <div class="fg"><label class="fl">Priority 3</label><input class="fi" value="Mumbai"></div>
+    <div class="fg"><label class="fl">Priority 4</label><input class="fi" value="Chennai"></div>
+    <div class="fg"><label class="fl">Priority 5</label><input class="fi" value="Hyderabad"></div>
+  </div>
+  <div class="mf"><button class="btn btn-g" onclick="closeM('city-pri')">Cancel</button><button class="btn btn-p" onclick="closeM('city-pri');toast('City priority saved','success')">Save</button></div>
+</div></div>
+
+<div class="overlay" id="m-reset-pw"><div class="modal">
+  <div class="mh"><div class="mt">🔐 Reset Credentials</div><button class="mx" onclick="closeM('reset-pw')">✕</button></div>
+  <div class="mb">
+    <div class="fg"><label class="fl">Reg ID / User ID</label><input class="fi" placeholder="Enter candidate Reg ID"></div>
+    <div class="fg"><label class="fl">New Password (blank = auto-generate)</label><input class="fi" type="password" placeholder="Leave blank to auto-generate"></div>
+  </div>
+  <div class="mf"><button class="btn btn-g" onclick="closeM('reset-pw')">Cancel</button><button class="btn btn-p" onclick="closeM('reset-pw');toast('Password reset — new credentials emailed','success')">Reset & Email</button></div>
+</div></div>
+
+<div class="overlay" id="m-sbt-cfg"><div class="modal">
+  <div class="mh"><div class="mt">🖥 SBT Configuration</div><button class="mx" onclick="closeM('sbt-cfg')">✕</button></div>
+  <div class="mb">
+    <div class="sr"><div><div class="slbl">Block External URLs</div></div><div class="tgl on" onclick="this.classList.toggle('on')"></div></div>
+    <div class="sr"><div><div class="slbl">Disable Copy/Paste</div></div><div class="tgl on" onclick="this.classList.toggle('on')"></div></div>
+    <div class="sr"><div><div class="slbl">Full-Screen Enforcement</div></div><div class="tgl on" onclick="this.classList.toggle('on')"></div></div>
+    <div class="sr"><div><div class="slbl">Alt-Tab Detection</div></div><div class="tgl on" onclick="this.classList.toggle('on')"></div></div>
+  </div>
+  <div class="mf"><button class="btn btn-g" onclick="closeM('sbt-cfg')">Cancel</button><button class="btn btn-p" onclick="closeM('sbt-cfg');toast('SBT config saved','success')">Save Config</button></div>
+</div></div>
+
+<div class="overlay" id="m-add-adm"><div class="modal">
+  <div class="mh"><div class="mt">👤 Add Admin User</div><button class="mx" onclick="closeM('add-adm')">✕</button></div>
+  <div class="mb">
+    <div class="fg"><label class="fl">Full Name</label><input class="fi" placeholder="Admin name"></div>
+    <div class="fg"><label class="fl">Email</label><input class="fi" type="email" placeholder="admin@seb.gov.in"></div>
+    <div class="fg"><label class="fl">Role</label><select class="fs"><option>Content Author</option><option>Exam Coordinator</option><option>Data Analyst</option><option>Centre Manager</option></select></div>
+  </div>
+  <div class="mf"><button class="btn btn-g" onclick="closeM('add-adm')">Cancel</button><button class="btn btn-p" onclick="closeM('add-adm');toast('Admin user created — invite sent','success')">Create User</button></div>
+</div></div>
+
+<div id="tc"></div>
+
+<script>
+/* ═══════════ BACKEND ═══════════ */
+const DB={
+  g(k){try{return JSON.parse(localStorage.getItem('seb_'+k))||null}catch(e){return null}},
+  s(k,v){localStorage.setItem('seb_'+k,JSON.stringify(v))}
+};
+function seed(){
+  if(DB.g('ok'))return;
+  DB.s('cands',[
+    {id:'12345',name:'Manasa R.',exam:'MCA 2026',city:'Bengaluru',cat:'General',status:'Active',score:88,seat:45},
+    {id:'12346',name:'Arjun M.',exam:'MCA 2026',city:'Delhi',cat:'OBC',status:'Pending',score:72,seat:12},
+    {id:'12347',name:'Priya S.',exam:'BCA 2026',city:'Mumbai',cat:'General',status:'Verified',score:91,seat:7},
+    {id:'12348',name:'Ravi K.',exam:'MCA 2026',city:'Chennai',cat:'SC',status:'Failed',score:45,seat:33},
+    {id:'12349',name:'Meena T.',exam:'BCA 2026',city:'Bengaluru',cat:'OBC',status:'Active',score:79,seat:18},
+    {id:'12350',name:'Kiran D.',exam:'MCA 2026',city:'Hyderabad',cat:'General',status:'Pending',score:63,seat:22},
+    {id:'12351',name:'Neha P.',exam:'BCA 2026',city:'Pune',cat:'General',status:'Verified',score:84,seat:5},
+    {id:'12352',name:'Suresh B.',exam:'MBA Entrance',city:'Delhi',cat:'ST',status:'Active',score:55,seat:41}
+  ]);
+  DB.s('exams',[
+    {id:'e1',name:'MCA 2026',date:'2026-04-12',shift:'Shift A (9AM–12PM)',dur:'2',cands:'4200',ctrs:'18',status:'Live'},
+    {id:'e2',name:'BCA 2026',date:'2026-04-20',shift:'Shift B (2PM–5PM)',dur:'2',cands:'3100',ctrs:'12',status:'Upcoming'},
+    {id:'e3',name:'MBA Entrance',date:'2026-05-05',shift:'Full Day',dur:'3',cands:'5800',ctrs:'17',status:'Scheduled'}
+  ]);
+  DB.s('ctrs',[
+    {id:'c1',name:'Bengaluru Node',city:'Bengaluru',type:'Node',seats:300,node:30,booked:280},
+    {id:'c2',name:'Delhi Prime Centre',city:'Delhi',type:'Node',seats:300,node:30,booked:300},
+    {id:'c3',name:'Mumbai Hub',city:'Mumbai',type:'Standard',seats:300,node:18,booked:210},
+    {id:'c4',name:'Chennai Node',city:'Chennai',type:'Node',seats:300,node:25,booked:260},
+    {id:'c5',name:'Hyderabad Centre',city:'Hyderabad',type:'Standard',seats:300,node:15,booked:190},
+    {id:'c6',name:'Pune Satellite',city:'Pune',type:'Standard',seats:300,node:10,booked:150}
+  ]);
+  DB.s('qpacks',[
+    {id:'q1',name:'MCA2026_Set_A.xlsx',exam:'MCA 2026',type:'CBT',count:120,format:'Excel',status:'Verified'},
+    {id:'q2',name:'BCA2026_Bond.pdf',exam:'BCA 2026',type:'IBT',count:80,format:'PDF',status:'Pending'},
+    {id:'q3',name:'MBA_AIAllocated.json',exam:'MBA Entrance',type:'CBT+IBT',count:200,format:'AI Allocated',status:'Verified'},
+    {id:'q4',name:'MCA2026_Set_B.xlsx',exam:'MCA 2026',type:'CBT',count:120,format:'Excel',status:'Draft'}
+  ]);
+  DB.s('cuts',{General:78,OBC:68,SCST:55,PwD:50});
+  DB.s('act',[
+    {ic:'📤',t:'p',tx:'Question pack <b>MCA_Q3.xlsx</b> uploaded',tm:'2 mins ago'},
+    {ic:'✅',t:'g',tx:'Session <b>#SID-4421</b> completed — data captured',tm:'11 mins ago'},
+    {ic:'⚙️',t:'y',tx:'Exam timing edited by <b>Admin@SEB</b>',tm:'34 mins ago'},
+    {ic:'🚨',t:'r',tx:'Candidate <b>12348</b> verification failed',tm:'1 hr ago'},
+    {ic:'🏢',t:'p',tx:'Centre booking confirmed — <b>Bengaluru Node</b>',tm:'2 hrs ago'}
+  ]);
+  DB.s('ups',[
+    {file:'MCA2026_candidates.csv',type:'Candidates',records:4200,by:'Super Admin',time:'10 mins ago',st:'Success'},
+    {file:'BCA2026_Set_A.xlsx',type:'Questions',records:80,by:'Content Mgr',time:'2 hrs ago',st:'Success'},
+    {file:'MBA_Bond_Paper.pdf',type:'Questions',records:200,by:'Super Admin',time:'Yesterday',st:'Success'}
+  ]);
+  DB.s('notifs',[
+    {ic:'🚨',t:'r',tx:'Candidate 12348 document verification failed',tm:'1 hr ago',read:false},
+    {ic:'📦',t:'p',tx:'New question pack MCA_Q3.xlsx ready for review',tm:'2 hrs ago',read:false},
+    {ic:'✅',t:'g',tx:'BCA 2026 AI question allocation complete',tm:'3 hrs ago',read:true},
+    {ic:'⏰',t:'y',tx:'MBA Entrance registration closes in 7 days',tm:'Today',read:true},
+    {ic:'🏢',t:'p',tx:'New centre added: Hyderabad Centre (300 seats)',tm:'Yesterday',read:true}
+  ]);
+  DB.s('ok',true);
+}
+
+/* ═══════════ NAVIGATION ═══════════ */
+const PG={
+  dashboard:  {t:'Dashboard',      s:'Overview',       a1:'＋ New Exam',      f1:()=>openM('add-exam'),  a2:'⬇ Export'},
+  analytics:  {t:'Analytics',      s:'Reports',        a1:'⬇ Export',         a2:'🔄 Refresh'},
+  questions:  {t:'Question Packs', s:'Content Engine', a1:'＋ Add Pack',       f1:()=>openM('add-qp'),    a2:'⬇ Export'},
+  upload:     {t:'Upload Centre',  s:'Content Engine', a1:'📤 Upload',         a2:'📋 History'},
+  allocation: {t:'AI Allocation',  s:'Content Engine', a1:'⚡ Run AI',         a2:'📊 Status'},
+  onboarding: {t:'Onboarding',     s:'Candidates',     a1:'＋ Add Candidate',  f1:()=>openM('add-cand'),  a2:'⬇ Export'},
+  registration:{t:'Registration',  s:'Candidates',     a1:'＋ Register',       f1:()=>openM('add-cand'),  a2:'📊 Stats'},
+  admitcard:  {t:'Admit Cards',    s:'Candidates',     a1:'⚡ Generate All',   f1:genAdmit,               a2:'⬇ Bulk Download'},
+  centres:    {t:'Centre Booking', s:'Exam Ops',       a1:'＋ Add Centre',     f1:()=>openM('add-ctr'),   a2:'📋 Map View'},
+  scheduling: {t:'Scheduling',     s:'Exam Ops',       a1:'＋ New Exam',       f1:()=>openM('add-exam'),  a2:'📅 Calendar'},
+  sessions:   {t:'Live Sessions',  s:'Exam Ops',       a1:'📡 Monitor',        a2:'🔄 Refresh'},
+  results:    {t:'Results',        s:'Results',        a1:'⬇ Export',          a2:'📢 Publish'},
+  cutoff:     {t:'Cutoff',         s:'Results',        a1:'✏️ Set Cutoffs',     f1:()=>openM('set-cut'),   a2:'📢 Publish'},
+  controls:   {t:'Admin Controls', s:'System',         a1:'💾 Save All',       a2:'🔄 Reset'},
+  permissions:{t:'Permissions',    s:'System',         a1:'＋ Add Admin',      f1:()=>openM('add-adm'),   a2:'📋 Audit Log'},
+  notifications:{t:'Notifications',s:'Alerts',         a1:'Mark all read',     f1:markAllRead,            a2:'⚙️ Settings'},
+  profile:    {t:'Profile',        s:'Account',        a1:'💾 Save',           f1:savePf,                 a2:'🔐 Password'}
+};
+let cur='dashboard';
+function goTo(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('on'));
+  const pg=document.getElementById('page-'+p);
+  if(pg)pg.classList.add('on');
+  document.querySelectorAll('.nav-item').forEach(x=>{if(x.dataset.page===p)x.classList.add('on');});
+  const m=PG[p]||{t:p,s:p,a1:'',a2:''};
+  document.getElementById('pg-title').textContent=m.t;
+  document.getElementById('pg-sub').textContent=m.s;
+  document.getElementById('tb1').textContent=m.a1;
+  document.getElementById('tb2').textContent=m.a2;
+  cur=p; rPage(p); window.scrollTo(0,0);
+}
+function tb1Act(){const m=PG[cur];if(m?.f1)m.f1();else toast('Action triggered','info');}
+function tb2Act(){toast('Exporting data…','info');}
+
+/* ═══════════ RENDER PAGES ═══════════ */
+function rPage(p){
+  const fn={dashboard:rDash,onboarding:rCands,questions:()=>rQP('all'),centres:rCtrs,scheduling:rExams,sessions:rSess,results:rResults,cutoff:rCutoff,analytics:rAnalytics,upload:rUploads,admitcard:rAdmit,notifications:rNotifs};
+  if(fn[p])fn[p]();
+}
+
+/* DASHBOARD */
+function rDash(){
+  const C=DB.g('cands')||[],E=DB.g('exams')||[],Q=DB.g('qpacks')||[],CT=DB.g('ctrs')||[],AC=DB.g('act')||[];
+  const pend=C.filter(c=>c.status==='Pending').length;
+  _t('dc',C.length); _t('dc-d','↑ '+pend+' pending verification');
+  _t('de',E.filter(e=>e.status==='Live').length);
+  _t('de-d',(E.find(e=>e.status==='Live')?.name||'No active')+' live');
+  _t('dct',CT.length); _t('dq',Q.length);
+  _t('dq-d','↓ '+Q.filter(q=>q.status==='Pending').length+' pending review');
+  _t('pend-n',pend);
+  const q=C.filter(c=>c.score>=70).length,nq=C.filter(c=>c.score>0&&c.score<55).length,ho=C.filter(c=>c.score>=55&&c.score<70).length;
+  _t('d-ql',q); _t('d-nql',nq); _t('d-hl',ho);
+  _h('d-ct',C.slice(0,6).map(c=>`<tr><td>${c.name}</td><td style="color:var(--mu);font-size:11px">${c.id}</td><td>${c.exam}</td><td>${sb(c.status)}</td></tr>`).join(''));
+  _h('d-el',E.map(e=>`<div style="padding:10px;border:1px solid var(--bd);border-radius:9px;margin-bottom:8px;cursor:pointer" onclick="goTo('scheduling')" onmouseover="this.style.borderColor='rgba(124,58,237,.35)'" onmouseout="this.style.borderColor='var(--bd)'"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><div><div style="font-weight:700;font-size:12.5px">${e.name}</div><div style="font-size:10.5px;color:var(--mu)">${e.date} · ${e.shift}</div></div>${sb(e.status)}</div><div style="display:flex;gap:10px;font-size:11px;color:var(--mu)"><span>👤 ${Number(e.cands).toLocaleString()}</span><span>🏢 ${e.ctrs}</span><span>⏱ ${e.dur}h</span></div></div>`).join(''));
+  _h('d-af',AC.map(a=>`<div class="ai"><div class="ai-ic ${a.t}">${a.ic}</div><div><div class="ai-tx">${a.tx}</div><div class="ai-tm">${a.tm}</div></div></div>`).join(''));
+  const fi={Excel:'📊',PDF:'📄',Bond:'📑','AI Allocated':'🤖'};
+  _h('d-qpl',Q.slice(0,4).map(q=>`<div class="qpi"><div class="qpl"><div class="qp-ic ${fmtCls(q.format)}">${fi[q.format]||'📦'}</div><div><div class="qpn">${q.name}</div><div class="qps">${q.count} Qs · ${q.type} · ${q.status}</div></div></div><button class="btn btn-g btn-sm" onclick="goTo('questions')">${q.status==='Pending'?'Review':'View'}</button></div>`).join(''));
+}
+
+/* CANDIDATES */
+function rCands(){
+  const C=DB.g('cands')||[];
+  const q=(document.getElementById('cs-q')?.value||'').toLowerCase();
+  const f=document.getElementById('cs-f')?.value||'';
+  const rows=C.filter(c=>(!q||c.name.toLowerCase().includes(q)||c.id.includes(q))&&(!f||c.status===f));
+  _h('cands-tb',rows.length?rows.map(c=>`<tr><td>${c.name}</td><td style="color:var(--mu);font-size:11px">${c.id}</td><td>${c.exam}</td><td>${c.city||'—'}</td><td>${c.cat}</td><td>${sb(c.status)}</td><td><div style="display:flex;gap:5px"><button class="btn btn-g btn-sm" onclick="toast('Edit ${c.name}','info')">Edit</button><button class="btn btn-r btn-sm" onclick="delCand('${c.id}')">Del</button></div></td></tr>`).join(''):'<tr><td colspan="7" style="text-align:center;color:var(--mu);padding:22px">No candidates found</td></tr>');
+}
+
+/* QUESTION PACKS */
+function rQP(filter){
+  const Q=DB.g('qpacks')||[];
+  const list=filter==='all'?Q:Q.filter(q=>q.type===filter);
+  const fi={Excel:'📊',PDF:'📄',Bond:'📑','AI Allocated':'🤖'};
+  _h('qp-list',list.length?list.map(q=>`<div class="qpi"><div class="qpl"><div class="qp-ic ${fmtCls(q.format)}">${fi[q.format]||'📦'}</div><div><div class="qpn">${q.name}</div><div class="qps">${q.count} Qs · ${q.type} · ${q.exam}</div></div></div><div style="display:flex;align-items:center;gap:7px">${sb(q.status)}<button class="btn btn-r btn-sm" onclick="delQP('${q.id}')">✕</button></div></div>`).join(''):'<div style="color:var(--mu);text-align:center;padding:18px">No packs found</div>');
+}
+function fqp(f,el){document.querySelectorAll('#page-questions .btn').forEach(b=>b.style.background='var(--s2)');el.style.background='var(--s4)';rQP(f);}
+
+/* CENTRES */
+function rCtrs(){
+  const CT=DB.g('ctrs')||[];
+  _h('centres-grid',CT.map(c=>`<div class="cntc"><div class="cntc-n">🏢 ${c.name}</div><div class="cs-row"><div class="csb"><strong>${c.seats}</strong>Total</div><div class="csb"><strong>${c.node}</strong>Node</div><div class="csb"><strong>${c.booked}</strong>Booked</div></div><div class="cap"><div class="cap-f" style="width:${Math.round(c.booked/c.seats*100)}%"></div></div><div style="display:flex;gap:5px;margin-top:9px"><button class="btn btn-g btn-sm" style="flex:1" onclick="toast('${c.name} details','info')">View</button><button class="btn btn-r btn-sm" onclick="delCtr('${c.id}')">✕</button></div></div>`).join(''));
+}
+
+/* EXAMS */
+function rExams(){
+  const E=DB.g('exams')||[];
+  _h('exams-tb',E.map(e=>`<tr><td style="font-weight:700">${e.name}</td><td style="color:var(--mu)">${e.date}</td><td style="color:var(--mu)">${e.shift}</td><td>${e.dur}h</td><td>${Number(e.cands).toLocaleString()}</td><td>${e.ctrs}</td><td>${sb(e.status)}</td><td><div style="display:flex;gap:5px"><button class="btn btn-g btn-sm" onclick="toast('Edit exam form opened','info')">Edit</button><button class="btn btn-r btn-sm" onclick="delExam('${e.id}')">Del</button></div></td></tr>`).join(''));
+}
+
+/* SESSIONS */
+function rSess(){
+  const C=(DB.g('cands')||[]).filter(c=>c.status==='Active'||c.status==='Verified');
+  _t('lv-cnt',C.length);
+  _h('sessions-grid',C.map((c,i)=>`<div class="secard"><div class="se-id">#SID-${4400+i+1}</div><div class="se-nm">${c.name}</div><div class="se-info">${c.exam} · Seat ${c.seat}</div><div class="se-live"><span class="ldot"></span> Live</div></div>`).join(''));
+}
+
+/* RESULTS */
+function rResults(){
+  const C=(DB.g('cands')||[]).filter(c=>c.score>0).sort((a,b)=>b.score-a.score);
+  _h('results-tb',C.slice(0,8).map((c,i)=>`<tr><td style="color:var(--pr);font-weight:700">#${i+1}</td><td>${c.name}</td><td style="font-weight:700">${c.score}/120</td><td>${Math.round(c.score/120*100)}%</td><td>${c.score>=70?'<span class="badge b-g">Qualified</span>':c.score>=55?'<span class="badge b-y">On Hold</span>':'<span class="badge b-r">Not Qual.</span>'}</td></tr>`).join(''));
+}
+
+/* CUTOFF */
+function rCutoff(){
+  const co=DB.g('cuts')||{General:78,OBC:68,SCST:55,PwD:50};
+  const bars=[{l:'General',v:co.General},{l:'OBC',v:co.OBC},{l:'SC/ST',v:co.SCST},{l:'PwD',v:co.PwD}];
+  _h('cutoff-bars',bars.map(b=>`<div class="pw"><div class="pt"><span>${b.l}</span><span style="color:#5b21b6">${b.v} / 120</span></div><div class="pb2"><div class="pf" style="width:${Math.round(b.v/120*100)}%"></div></div></div>`).join(''));
+  const C=DB.g('cands')||[];
+  _h('cut-tb',bars.map(b=>{const q=C.filter(c=>c.score>=b.v).length;return `<tr><td>${b.l}</td><td style="color:var(--pr);font-weight:700">${b.v}</td><td><span class="badge b-g">${q}</span></td><td><span class="badge b-r">${C.length-q}</span></td></tr>`}).join(''));
+}
+
+/* ANALYTICS */
+function rAnalytics(){
+  const vals=[320,480,620,890,1100,1350,1620,1890,2200,2600,3100,4200];
+  const months=['May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr'];
+  const mx=Math.max(...vals);
+  _h('reg-chart',vals.map((v,i)=>`<div class="abar" style="flex:1;background:linear-gradient(180deg,#7c3aed,#5b21b6);border-radius:4px 4px 0 0;height:${Math.round(v/mx*130)}px;opacity:${0.45+i/vals.length*0.55}"></div>`).join(''));
+  _h('reg-lbl',months.map(m=>`<span>${m}</span>`).join(''));
+  const sc=[120,180,340,580,720,640,420,280,160,80];const sm=Math.max(...sc);
+  _h('score-chart',sc.map((v,i)=>`<div class="abar" style="flex:1;background:linear-gradient(180deg,#059669,#065f46);border-radius:4px 4px 0 0;height:${Math.round(v/sm*130)}px;opacity:.75"></div>`).join(''));
+}
+
+/* UPLOADS */
+function rUploads(){
+  const U=DB.g('ups')||[];
+  _h('up-tb',U.map(u=>`<tr><td style="font-weight:600">${u.file}</td><td><span class="badge b-w">${u.type}</span></td><td>${u.records.toLocaleString()}</td><td style="color:var(--mu)">${u.by}</td><td style="color:var(--mu)">${u.time}</td><td><span class="badge b-g">${u.st}</span></td></tr>`).join(''));
+}
+
+/* ADMIT */
+function rAdmit(){
+  const C=DB.g('cands')||[];
+  const s=document.getElementById('ac-cs');
+  if(s)s.innerHTML=C.map(c=>`<option value="${c.id}">${c.name} (${c.id})</option>`).join('');
+  updAdmit();
+  _t('ac-gen',C.filter(c=>c.status==='Active'||c.status==='Verified').length);
+  _t('ac-pnd',C.filter(c=>c.status==='Pending').length);
+  _t('ac-fail',C.filter(c=>c.status==='Failed').length);
+}
+function updAdmit(){
+  const id=document.getElementById('ac-cs')?.value;
+  const C=DB.g('cands')||[];
+  const c=C.find(x=>x.id===id)||C[0];
+  if(c){_t('ac-nm',c.name);_t('ac-rg',c.id);_t('ac-ex',c.exam);_t('ac-st',c.seat);_t('ac-ct',c.city);}
+}
+
+/* NOTIFICATIONS */
+function rNotifs(){
+  const N=DB.g('notifs')||[];
+  _h('notif-list',N.map((n,i)=>`<div class="ai" style="padding:11px 16px;${!n.read?'background:rgba(124,58,237,.03)':''};cursor:pointer" onclick="markRead(${i})"><div class="ai-ic ${n.t}">${n.ic}</div><div style="flex:1"><div class="ai-tx" style="${!n.read?'font-weight:700':''}">${n.tx}</div><div class="ai-tm">${n.tm}</div></div>${!n.read?'<span class="ldot" style="background:var(--pr2)"></span>':''}</div>`).join(''));
+}
+
+/* ═══════════ CRUD ═══════════ */
+function addCand(){
+  const nm=document.getElementById('nc-nm').value.trim();
+  if(!nm){toast('Please enter candidate name','error');return;}
+  const C=DB.g('cands')||[];
+  const id=String(12345+C.length+1);
+  C.push({id,name:nm,exam:v('nc-ex'),city:v('nc-cy'),cat:v('nc-cat'),status:v('nc-st'),score:0,seat:Math.floor(Math.random()*100)+1});
+  DB.s('cands',C);
+  addAct('👤','g',`New candidate <b>${nm}</b> added (ID: ${id})`);
+  closeM('add-cand'); toast(`${nm} added successfully`,'success');
+  document.getElementById('nc-nm').value=''; rPage(cur);
+}
+function delCand(id){
+  let C=DB.g('cands')||[];const c=C.find(x=>x.id===id);
+  C=C.filter(x=>x.id!==id);DB.s('cands',C);
+  toast(`${c?.name||'Candidate'} removed`,'info'); rCands(); rDash();
+}
+function addExam(){
+  const nm=document.getElementById('ne-nm').value.trim();
+  if(!nm){toast('Enter exam name','error');return;}
+  const E=DB.g('exams')||[];
+  E.push({id:'e'+Date.now(),name:nm,date:v('ne-dt'),shift:v('ne-sh'),dur:v('ne-dr'),cands:v('ne-cn')||'0',ctrs:v('ne-ct')||'0',status:'Scheduled'});
+  DB.s('exams',E);closeM('add-exam');
+  toast(`Exam "${nm}" scheduled`,'success');
+  document.getElementById('ne-nm').value=''; rPage(cur);
+}
+function delExam(id){
+  let E=DB.g('exams')||[];E=E.filter(x=>x.id!==id);DB.s('exams',E);
+  toast('Exam removed','info'); rExams();
+}
+function addCtr(){
+  const nm=document.getElementById('nct-nm').value.trim();
+  if(!nm){toast('Enter centre name','error');return;}
+  const CT=DB.g('ctrs')||[];const seats=parseInt(v('nct-st'))||300;
+  CT.push({id:'c'+Date.now(),name:nm,city:v('nct-cy'),type:v('nct-ty'),seats,node:parseInt(v('nct-nd'))||30,booked:0});
+  DB.s('ctrs',CT);closeM('add-ctr');
+  toast(`Centre "${nm}" added`,'success');
+  document.getElementById('nct-nm').value=''; rCtrs();
+}
+function delCtr(id){
+  let CT=DB.g('ctrs')||[];CT=CT.filter(x=>x.id!==id);DB.s('ctrs',CT);
+  toast('Centre removed','info'); rCtrs();
+}
+function addQP(){
+  const nm=document.getElementById('qp-nm').value.trim();
+  if(!nm){toast('Enter pack name','error');return;}
+  const Q=DB.g('qpacks')||[];
+  Q.push({id:'q'+Date.now(),name:nm,exam:v('qp-ex'),type:v('qp-ty'),count:parseInt(v('qp-cnt'))||0,format:v('qp-fmt'),status:'Pending'});
+  DB.s('qpacks',Q);toast(`Pack "${nm}" uploaded`,'success');
+  document.getElementById('qp-nm').value=''; rQP('all');
+}
+function addQPM(){
+  const nm=document.getElementById('nqp-nm').value.trim();
+  if(!nm){toast('Enter pack name','error');return;}
+  const Q=DB.g('qpacks')||[];
+  Q.push({id:'q'+Date.now(),name:nm,exam:v('nqp-ex'),type:v('nqp-ty'),count:parseInt(v('nqp-cnt'))||0,format:v('nqp-fmt'),status:'Pending'});
+  DB.s('qpacks',Q);closeM('add-qp');toast(`Pack "${nm}" saved`,'success');
+  document.getElementById('nqp-nm').value=''; rQP('all');
+}
+function delQP(id){
+  let Q=DB.g('qpacks')||[];Q=Q.filter(x=>x.id!==id);DB.s('qpacks',Q);
+  toast('Pack removed','info'); rQP('all');
+}
+function saveCut(){
+  DB.s('cuts',{General:parseInt(v('cut-gn'))||78,OBC:parseInt(v('cut-ob'))||68,SCST:parseInt(v('cut-sc'))||55,PwD:parseInt(v('cut-pw'))||50});
+  closeM('set-cut');toast('Cutoffs saved and applied','success');rCutoff();
+}
+function genAdmit(){toast('Generating admit cards for all eligible candidates…','info');setTimeout(()=>toast('Admit cards generated successfully','success'),1400);}
+function markRead(i){const N=DB.g('notifs')||[];N[i].read=true;DB.s('notifs',N);rNotifs();}
+function markAllRead(){const N=DB.g('notifs')||[];N.forEach(n=>n.read=true);DB.s('notifs',N);rNotifs();toast('All notifications marked as read','info');}
+function savePf(){
+  const nm=document.getElementById('p-nm').value;
+  DB.s('prof',{name:nm,email:v('p-em'),phone:v('p-ph')});
+  _t('av-name',nm);_t('pf-nm',nm);
+  const ini=nm.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  _t('av-txt',ini);_t('pf-av',ini);
+  toast('Profile updated','success');
+}
+function addAct(ic,t,tx){
+  const A=DB.g('act')||[];A.unshift({ic,t,tx,tm:'Just now'});DB.s('act',A.slice(0,10));
+}
+
+/* ═══════════ MODALS ═══════════ */
+function openM(id){document.getElementById('m-'+id)?.classList.add('open');}
+function closeM(id){document.getElementById('m-'+id)?.classList.remove('open');}
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+
+/* ═══════════ TOAST ═══════════ */
+function toast(msg,type='info'){
+  const ic={success:'✅',error:'❌',info:'💜'}[type];
+  const t=document.createElement('div');t.className=`toast ${type}`;
+  t.innerHTML=`<span>${ic}</span><span>${msg}</span>`;
+  document.getElementById('tc').appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(18px)';t.style.transition='all .3s';setTimeout(()=>t.remove(),350);},2800);
+}
+
+/* ═══════════ HELPERS ═══════════ */
+function _t(id,val){const el=document.getElementById(id);if(el)el.textContent=val;}
+function _h(id,html){const el=document.getElementById(id);if(el)el.innerHTML=html;}
+function v(id){const el=document.getElementById(id);return el?el.value:'';}
+function sb(s){const m={Active:'b-g',Pending:'b-y',Verified:'b-p',Failed:'b-r',Live:'b-g',Upcoming:'b-y',Scheduled:'b-p',Draft:'b-w',Success:'b-g'};return `<span class="badge ${m[s]||'b-w'}">${s}</span>`;}
+function fmtCls(f){return f==='Excel'?'xl':f==='PDF'?'pd':f==='Bond'?'bn':'ai';}
+
+/* ═══════════ INIT ═══════════ */
+seed();
+document.querySelectorAll('.nav-item[data-page]').forEach(el=>{
+  el.addEventListener('click',()=>goTo(el.dataset.page));
+});
+goTo('dashboard');
+</script>
+</body>
+</html>
