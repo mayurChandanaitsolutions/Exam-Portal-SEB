@@ -1,0 +1,36 @@
+body {
+    background: linear-gradient(135deg, #edf2fb, #d7e3fc);
+    font-family: Arial, sans-serif;
+}
+
+.auth-card, .card {
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.dashboard-card {
+    border: none;
+    border-radius: 20px;
+    color: #fff;
+}
+
+.bg1 { background: #3a86ff; }
+.bg2 { background: #8338ec; }
+.bg3 { background: #ff006e; }
+.bg4 { background: #2a9d8f; }
+
+video, canvas {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+}
+
+.preview-img {
+    max-width: 180px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+}
